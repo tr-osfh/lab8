@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2025-05-07T13:42:28.276877900Z</date>
+  <millis>1746625348276</millis>
+  <nanos>877900</nanos>
+  <sequence>0</sequence>
+  <logger>collection.ServerLogger</logger>
+  <level>INFO</level>
+  <class>file.FileManager</class>
+  <method>loadCSV</method>
+  <thread>1</thread>
+  <message>Загружена коллекция из 3 драконов.</message>
+</record>
+<record>
+  <date>2025-05-07T13:42:28.358884900Z</date>
+  <millis>1746625348358</millis>
+  <nanos>884900</nanos>
+  <sequence>1</sequence>
+  <logger>collection.ServerLogger</logger>
+  <level>INFO</level>
+  <class>connection.Server</class>
+  <method>run</method>
+  <thread>1</thread>
+  <message>Сервер запущен на порту 21213</message>
+</record>
+</log>
