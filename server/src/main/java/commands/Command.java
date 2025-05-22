@@ -13,4 +13,5 @@ public interface Command extends Serializable{
     User getUser();
     Response execute();
     String getCommandName();
+    boolean requiresRefresh();
 }

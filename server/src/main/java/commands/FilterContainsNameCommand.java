@@ -6,9 +6,12 @@ import connection.CommandResponse;
 import connection.Response;
 import connection.ResponseStatus;
 import connection.User;
+import seClasses.Dragon;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.PriorityQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * Команда фильтрации элементов коллекции по содержанию подстроки в имени.
@@ -33,11 +36,25 @@ public class FilterContainsNameCommand implements Command, Serializable {
 
     @Override
     public Response execute() {
-        return new Response(ResponseStatus.OK, CollectionManager.filterContainsName(namePart), CommandResponse.FILTER_CONTAINS_NAME);
+        String response;
+        PriorityBlockingQueue<Dragon> dragons = CollectionManager.filterContainsName(namePart);
+
+        if(dragons.isEmpty()){
+            response = "isEmpty";
+        }else {
+            response = "Success";
+        }
+
+        return new Response(ResponseStatus.OK, response, dragons, CommandResponse.FILTER_CONTAINS_NAME);
+
     }
 
     @Override
     public String getCommandName() {
         return "filter_contains_name";
+    }
+
+    public boolean requiresRefresh() {
+        return false;
     }
 }

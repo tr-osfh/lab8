@@ -38,4 +38,8 @@ public class RemoveByIdCommand implements Command, Serializable {
     public String getCommandName() {
         return "remove_by_id";
     }
+
+    public boolean requiresRefresh() {
+        return true;
+    }
 }

@@ -34,4 +34,8 @@ public class ExitCommand implements Command, Serializable {
     public String getCommandName() {
         return "exit";
     }
+
+    public boolean requiresRefresh() {
+        return false;
+    }
 }

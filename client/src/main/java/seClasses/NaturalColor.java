@@ -31,4 +31,22 @@ public enum NaturalColor implements Serializable {
             return null;
         }
     }
+    @Override
+    public String toString() {
+        switch (this) {
+            case RED:
+                return "Red";
+            case BLACK:
+                return "Black";
+            case WHITE:
+                return "White";
+            case YELLOW:
+                return "Yellow";
+            case BROWN:
+                return "Brown";
+            default:
+                return "None";
+        }
+    }
+
 }

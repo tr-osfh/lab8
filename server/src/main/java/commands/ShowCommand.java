@@ -36,4 +36,8 @@ public class ShowCommand implements Command, Serializable {
     public String getCommandName() {
         return "show";
     }
+
+    public boolean requiresRefresh() {
+        return false;
+    }
 }

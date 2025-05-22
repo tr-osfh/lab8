@@ -31,6 +31,11 @@ public class ProcessCommand implements Runnable {
             Response response = command.execute();
 
             responseSender.sendResponse(output, CommandSerializer.serialize(response));
+
+            if (command.requiresRefresh()) {
+                Refresher.refresh();
+            }
+
         } catch (ClassNotFoundException | IOException e) {
             ServerLogger.getLogger().warning("Ошибка обработки команды.");
         }

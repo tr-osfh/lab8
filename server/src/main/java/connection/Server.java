@@ -1,14 +1,17 @@
 package connection;
 
+import collection.CollectionManager;
 import collection.ServerLogger;
 import console.ConsoleManager;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 
@@ -18,6 +21,7 @@ public class Server {
     private final int port;
     private volatile boolean running = true;
     private ServerSocket serverSocket;
+    private static List<Socket> connectedUsers = new java.util.ArrayList<>();
 
     private final ForkJoinPool readPool = new ForkJoinPool();
 
@@ -28,7 +32,7 @@ public class Server {
 
     public void run() {
         try {
-            serverSocket = new ServerSocket(port);
+            serverSocket = new ServerSocket(port, 0, InetAddress.getByName("0.0.0.0"));
             serverSocket.setSoTimeout(100);
             ServerLogger.getLogger().info("Сервер запущен на порту " + port);
 
@@ -51,6 +55,10 @@ public class Server {
             Socket clientSocket = serverSocket.accept();
             ServerLogger.getLogger().info("Подключен клиент: " + clientSocket.getRemoteSocketAddress());
 
+
+            connectedUsers.add(clientSocket);
+            Refresher.refresh(CollectionManager.getDragons(), clientSocket);
+
             readPool.execute(() -> {
                 try (
                         InputStream input = clientSocket.getInputStream();
@@ -69,6 +77,7 @@ public class Server {
                     ServerLogger.getLogger().warning("Ошибка клиента");
                 } finally {
                     ServerLogger.getLogger().info("Клиент отключился: " + clientSocket.getRemoteSocketAddress());
+                    connectedUsers.remove(clientSocket);
                     closeClientResources(clientSocket);
                 }
             });
@@ -118,5 +127,9 @@ public class Server {
         } catch (IOException e) {
             ServerLogger.getLogger().warning("Ошибка закрытия сервера");
         }
+    }
+
+    public static List<Socket> getConnectedUsers(){
+        return connectedUsers;
     }
 }

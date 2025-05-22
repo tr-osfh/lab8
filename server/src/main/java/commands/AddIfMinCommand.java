@@ -39,4 +39,8 @@ public class AddIfMinCommand implements Command, Serializable {
     public String getCommandName() {
         return "add_if_min";
     }
+
+    public boolean requiresRefresh() {
+        return true;
+    }
 }

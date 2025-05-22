@@ -33,4 +33,8 @@ public class RegistrationCommand implements Command, Serializable {
     public String getCommandName() {
         return "registration";
     }
+
+    public boolean requiresRefresh() {
+        return false;
+    }
 }

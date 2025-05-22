@@ -6,5 +6,6 @@ public enum ResponseStatus {
     EXIT,
     ERROR,
     WRONG_ARGUMENTS,
-    INFO;
+    INFO,
+    REFRESH;
 }

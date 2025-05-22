@@ -13,11 +13,13 @@ public enum DragonType implements Serializable {
     AIR;
     @Serial
     private static final long serialVersionUID = 33L;
+
     /**
      * Преобразует строку в значение перечисления DragonType.
+     *
      * @param name Строка, представляющая тип дракона.
      * @return Значение перечисления DragonType, соответствующее строке.
-     *         Если строка не соответствует ни одному значению, возвращает null.
+     * Если строка не соответствует ни одному значению, возвращает null.
      */
     public static DragonType ValueOf(String name) {
         try {
@@ -25,6 +27,20 @@ public enum DragonType implements Serializable {
         } catch (IllegalArgumentException e) {
             System.out.println("Ошибка: Неверный тип дракона: " + name);
             return null;
+        }
+    }
+
+    @Override
+    public String toString() {
+        switch (this) {
+            case WATER:
+                return "WaterType";
+            case UNDERGROUND:
+                return "UndergroundType";
+            case AIR:
+                return "AirType";
+            default:
+                return "None";
         }
     }
 }

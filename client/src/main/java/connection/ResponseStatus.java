@@ -7,5 +7,6 @@ public enum ResponseStatus {
     ERROR,
     WRONG_ARGUMENTS,
     INFO,
-    EXECUTE_SCRIPT;
+    EXECUTE_SCRIPT,
+    REFRESH;
 }

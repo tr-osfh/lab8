@@ -28,11 +28,22 @@ public class SumOfAgeCommand implements Command, Serializable {
 
     @Override
     public Response execute() {
-        return new Response(ResponseStatus.OK, CollectionManager.sumOfAge(), CommandResponse.SUM_OF_AGE);
+        String sum = CollectionManager.sumOfAge();
+        if (sum.equals("0") || sum.equals("no")){
+            return new Response(ResponseStatus.ERROR, sum, CommandResponse.SUM_OF_AGE);
+        } else {
+            return new Response(ResponseStatus.OK, sum, CommandResponse.SUM_OF_AGE);
+        }
+
+
     }
 
     @Override
     public String getCommandName() {
         return "sum_of_age";
+    }
+
+    public boolean requiresRefresh() {
+        return false;
     }
 }

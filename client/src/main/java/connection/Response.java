@@ -1,13 +1,14 @@
 package connection;
 
-import commands.CommandsList;
 import seClasses.Dragon;
+import seClasses.Info;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.concurrent.PriorityBlockingQueue;
 
 public class Response implements Serializable {
 
@@ -19,8 +20,17 @@ public class Response implements Serializable {
     private Collection<Dragon> collection;
     private CommandResponse type;
     private User user;
+    private Info info;
+    private PriorityBlockingQueue<Dragon> dragons;
 
     public Response(){}
+
+    public Response(ResponseStatus status, Info info, CommandResponse type, User user){
+        this.responseStatus = status;
+        this.info = info;
+        this.type = type;
+        this.user = user;
+    }
 
 
     public Response(ResponseStatus status, String response, CommandResponse type, User user){
@@ -48,8 +58,27 @@ public class Response implements Serializable {
         this.type = type;
     }
 
+    public Response(ResponseStatus status, PriorityBlockingQueue<Dragon> dragons){
+        this.responseStatus = status;
+        this.dragons = dragons;
+    }
+
+    public Response(ResponseStatus status, String response, PriorityBlockingQueue<Dragon> dragons, CommandResponse type){
+        this.response = response;
+        this.type = type;
+        this.responseStatus = status;
+        this.dragons = dragons;
+    }
+
     public CommandResponse getType() {
+        if (type == null){
+            return CommandResponse.DEFAULT;
+        }
         return type;
+    }
+
+    public PriorityBlockingQueue<Dragon> getDragons(){
+        return dragons;
     }
 
     public ResponseStatus getResponseStatus(){
@@ -64,8 +93,14 @@ public class Response implements Serializable {
         return user;
     }
 
-    public Collection<Dragon> getCollection(){
+    public Collection<Dragon> getCollection() {
         return collection;
+    }
+
+
+
+    public Info getInfo() {
+        return info;
     }
 
     @Override

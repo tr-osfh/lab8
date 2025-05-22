@@ -38,4 +38,8 @@ public class RemoveLowerCommand implements Command, Serializable {
     public String getCommandName() {
         return "remove_lower";
     }
+
+    public boolean requiresRefresh() {
+        return true;
+    }
 }

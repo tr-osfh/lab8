@@ -32,4 +32,8 @@ public class AuthorizationCommand implements Command, Serializable {
     public String getCommandName() {
         return "authorization";
     }
+
+    public boolean requiresRefresh() {
+        return false;
+    }
 }

@@ -48,4 +48,8 @@ public class HelpCommand implements Command, Serializable {
     public String getCommandName() {
         return "help";
     }
+
+    public boolean requiresRefresh() {
+        return false;
+    }
 }

@@ -50,7 +50,7 @@ public class Dragon implements Comparable<Dragon>, Serializable {
             Person killer,
             String userLogin
     ) {
-        if (name == null || name.isEmpty() || coordinates == null || (age != null && age <= 0) || weight <= 0 || type == null) {
+        if (name == null || name.isEmpty() || coordinates == null || (age != null && age <= 0) || type == null) {
             throw new IllegalArgumentException("Введенная информация содержит недопустимые значения.");
         } else {
             this.id = id;

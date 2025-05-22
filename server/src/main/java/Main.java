@@ -6,7 +6,7 @@ import connection.Server;
 
 public class Main {
     private static final ConsoleManager consoleManager = new ConsoleManager();
-    private final static Integer serverPort = 21213;
+    private final static Integer serverPort = 21214;
     public static void main(String[] args) {
         fileReader.read();
         Server server = new Server(serverPort, consoleManager);

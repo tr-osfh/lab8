@@ -37,4 +37,8 @@ public class ExecuteScriptCommand implements Command, Serializable {
     public String getCommandName() {
         return "execute_script";
     }
+
+    public boolean requiresRefresh() {
+        return true;
+    }
 }

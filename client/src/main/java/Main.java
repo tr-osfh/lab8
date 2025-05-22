@@ -1,3 +1,4 @@
+import app.logic.MainApp;
 import connection.Client;
 
 import java.net.InetAddress;
@@ -6,9 +7,13 @@ import java.util.NoSuchElementException;
 
 public class Main {
     private static InetAddress host;
-    private static final int serverPort = 21213;
-
+    private static final int serverPort = 21214;
     public static void main(String[] args) {
+        new Thread(() -> {
+            MainApp.launch(MainApp.class, args);
+        }).start();
+
+
         try {
             host = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {

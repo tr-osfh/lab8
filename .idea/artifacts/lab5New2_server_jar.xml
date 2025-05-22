@@ -5,7 +5,7 @@
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/server/META-INF/MANIFEST.MF" />
       </element>
-      <element id="module-output" name="lab5New2.server" />
+      <element id="module-output" name="lab8.server" />
       <element id="extracted-dir" path="$USER_HOME$/Downloads/postgresql-42.7.5.jar" path-in-jar="/" />
     </root>
   </artifact>

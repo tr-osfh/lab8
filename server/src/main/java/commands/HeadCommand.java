@@ -6,9 +6,11 @@ import connection.CommandResponse;
 import connection.Response;
 import connection.ResponseStatus;
 import connection.User;
+import seClasses.Dragon;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * Команда вывода первого элемента коллекции.
@@ -31,11 +33,25 @@ public class HeadCommand implements Command, Serializable {
 
     @Override
     public Response execute() {
-        return new Response(ResponseStatus.OK, CollectionManager.head(), CommandResponse.HEAD);
+        String response;
+        PriorityBlockingQueue<Dragon> dragons = CollectionManager.head();
+
+        if(dragons.isEmpty()){
+            response = "isEmpty";
+        }else {
+            response = "Success";
+        }
+
+        return new Response(ResponseStatus.OK, response, dragons, CommandResponse.HEAD);
+
     }
 
     @Override
     public String getCommandName() {
         return "head";
+    }
+
+    public boolean requiresRefresh() {
+        return false;
     }
 }

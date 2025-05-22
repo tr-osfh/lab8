@@ -36,12 +36,17 @@ public class AddCommand implements Command, Serializable {
         return new Response(
                 ResponseStatus.OK,
                 CollectionManager.add(dragon, user),
-                CommandResponse.ADD
+                CommandResponse.ADD,
+                user
         );
     }
 
     @Override
     public String getCommandName() {
         return "add";
+    }
+
+    public boolean requiresRefresh() {
+        return true;
     }
 }

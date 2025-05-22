@@ -33,11 +33,15 @@ public class InfoCommand implements Command, Serializable {
 
     @Override
     public Response execute() {
-        return new Response(ResponseStatus.OK, CollectionManager.info(user), CommandResponse.INFO);
+        return new Response(ResponseStatus.OK, CollectionManager.info(user), CommandResponse.INFO, user);
     }
 
     @Override
     public String getCommandName() {
         return "info";
+    }
+
+    public boolean requiresRefresh() {
+        return false;
     }
 }

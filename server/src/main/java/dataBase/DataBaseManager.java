@@ -20,7 +20,7 @@ public class DataBaseManager {
     public static Connection connect() throws SQLException {
         try{
             Class.forName("org.postgresql.Driver");
-            return DriverManager.getConnection("jdbc:postgresql://db:5432/studs", fileReader.getUser(), fileReader.getPassword());
+            return DriverManager.getConnection("jdbc:postgresql://localhost:5432/studs", fileReader.getUser(), fileReader.getPassword());
         } catch (SQLException e) {
             ServerLogger.getLogger().warning("Ошибка подключения к базе данных.");
             return null;

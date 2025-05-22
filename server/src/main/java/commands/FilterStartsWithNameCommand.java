@@ -6,9 +6,11 @@ import connection.CommandResponse;
 import connection.Response;
 import connection.ResponseStatus;
 import connection.User;
+import seClasses.Dragon;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * Команда фильтрации элементов коллекции по началу имени.
@@ -33,11 +35,25 @@ public class FilterStartsWithNameCommand implements Command, Serializable {
 
     @Override
     public Response execute() {
-        return new Response(ResponseStatus.OK, CollectionManager.filterStartsWithName(namePart), CommandResponse.FILTER_STARTS_WITH_NAME);
+        String response;
+        PriorityBlockingQueue<Dragon> dragons = CollectionManager.filterStartsWithName(namePart);
+
+        if(dragons.isEmpty()){
+            response = "isEmpty";
+        }else {
+            response = "Success";
+        }
+
+        return new Response(ResponseStatus.OK, response, dragons, CommandResponse.FILTER_STARTS_WITH_NAME);
+
     }
 
     @Override
     public String getCommandName() {
         return "filter_starts_with_name";
+    }
+
+    public boolean requiresRefresh() {
+        return false;
     }
 }

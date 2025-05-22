@@ -5,6 +5,7 @@ import commands.CommandsList;
 import commands.ExecuteScriptCommand;
 import console.*;
 import file.ExecuteScript;
+import seClasses.Dragon;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,6 +17,8 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
+import java.util.PriorityQueue;
+import java.util.concurrent.BlockingQueue;
 
 public class Client {
     private final String serverAddress;
@@ -23,13 +26,16 @@ public class Client {
     private SocketChannel socketChannel;
     private Selector selector;
     private ConsoleReader cr;
-    private Command pendingCommand;
+    private static Command  pendingCommand;
     private boolean isConnected = false;
     private boolean isWaitingForResponse = false;
     private boolean running = true;
     private boolean connectionProblem = true;
-    private User user;
-
+    private static User user;
+    private static String language = "Русский";
+    private static volatile Response mainResponse;
+    private static PriorityQueue<Dragon> dragons = new PriorityQueue<>();
+    private static volatile boolean needRefresh = false;
     public Client(String serverAddress, int port) {
         this.serverAddress = serverAddress;
         this.port = port;
@@ -37,6 +43,7 @@ public class Client {
     }
 
     public void connect() throws IOException {
+
         socketChannel = SocketChannel.open();
         socketChannel.configureBlocking(false);
         socketChannel.connect(new InetSocketAddress(serverAddress, port));
@@ -49,7 +56,9 @@ public class Client {
         if (connectionProblem && !isConnected){
             try {
                 connect();
+                System.out.println();
             } catch (IOException e) {
+                e.printStackTrace();
                 try {
                     noConnectionHandler();
 
@@ -132,7 +141,7 @@ public class Client {
                     if (cmd != null) {
                         pendingCommand = cmd;
                         SelectionKey key = socketChannel.keyFor(selector);
-                        if (key != null) key.interestOps(SelectionKey.OP_WRITE);
+                        if (key != null) key.interestOps(SelectionKey.OP_WRITE | SelectionKey.OP_READ);
                     }
                 }
             } catch (IOException e) {
@@ -151,8 +160,6 @@ public class Client {
         channel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
         cr.printLine("Подключено к серверу. \n");
 
-        cr.printLine("Для использования приложения необходимо зарегестрироваться. Для этого введите команду registration: \n");
-        cr.printLine("Введите команду: \n");
         isConnected = true;
         connectionProblem = false;
     }
@@ -167,13 +174,21 @@ public class Client {
             byte[] data = new byte[buffer.limit()];
             buffer.get(data);
             Response response = CommandSerializer.deserialize(data);
-            if (response.getType() == CommandResponse.AUTHORIZATION || response.getType() == CommandResponse.REGISTRATION){
-                if (response.getUser() != null){
-                    this.user = response.getUser();
+            System.out.println("Получен ответ от сервера: " + response.getResponseStatus());
+
+            if (response.getResponseStatus().equals(ResponseStatus.REFRESH)){
+                dragons.clear();
+                dragons.addAll(response.getDragons());
+                System.out.println("gbdjjasdfjl;ksadghjkol;asdgfhjkonl;adfgbnjkl;");
+                for (Dragon dragon : response.getDragons()) {
+                    System.out.println(dragon);
                 }
+                needRefresh = true;
             }
-            System.out.println(response.getResponse());
-            key.interestOps(SelectionKey.OP_WRITE);
+            else {
+                Client.mainResponse = response;
+            }
+            key.interestOps(SelectionKey.OP_WRITE | SelectionKey.OP_READ);
             isWaitingForResponse = false;
                 cr.printLine("Введите команду: \n");
         } else if (bytesRead == -1) {
@@ -188,13 +203,18 @@ public class Client {
             ByteBuffer buffer = ByteBuffer.wrap(CommandSerializer.serialize(pendingCommand));
             SocketChannel channel = (SocketChannel) key.channel();
             channel.write(buffer);
-            key.interestOps(SelectionKey.OP_READ);
+            key.interestOps(SelectionKey.OP_WRITE | SelectionKey.OP_READ);
             pendingCommand = null;
             isWaitingForResponse = true;
         }
     }
 
-    private Command readCommand() {
+    public static void setCommand(Command cmd){
+        pendingCommand = cmd;
+    }
+
+
+    private Command readCommand() { //todo Обратить внимание
         String[] input = cr.readCommand();
 
         if (input == null || input.length == 0) return null;
@@ -226,5 +246,39 @@ public class Client {
         }
         isConnected = false;
         connectionProblem = true;
+    }
+
+    public static PriorityQueue<Dragon> getDragons() {
+        return dragons;
+    }
+
+    public static String getLanguage(){
+        return language;
+    }
+
+    public static void setLanguage(String language) {
+        Client.language = language;
+    }
+
+    public static Response getResponse() {
+        Response rep = mainResponse;
+        mainResponse = null;
+        return rep;
+    }
+
+    public static User getUser() {
+        return user;
+    }
+
+    public static void setUser(User user) {
+        Client.user = user;
+    }
+
+    public static boolean isNeedRefresh() {
+        return needRefresh;
+    }
+
+    public static void setNeedRefresh(boolean needRefresh) {
+        Client.needRefresh = needRefresh;
     }
 }

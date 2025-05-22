@@ -13,7 +13,8 @@ public class fileReader {
     private static String user;
 
     public static void read() {
-        String filePath = System.getenv("PASS_PATH");
+        String filePath = "C:/Users/Sch/Desktop/.pass";
+        //System.getenv("PASS_PATH")
 
         if (filePath == null || filePath.isBlank()) {
             ServerLogger.getLogger().warning("Переменная окружения не найдена, подключение к базе данных невозможно!");

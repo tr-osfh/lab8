@@ -1,10 +1,12 @@
 package collection;
 
 import commands.CommandManager;
+import connection.Refresher;
 import connection.User;
 import console.ConsoleManager;
 import dataBase.DataBaseManager;
 import seClasses.Dragon;
+import seClasses.Info;
 
 import java.util.*;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -57,11 +59,11 @@ public class CollectionManager {
                     .anyMatch(d -> d.equals(dragon));
 
             if (alreadyExists) {
-                return "Этот дракон уже есть в коллекции.\n";
+                return "AlreadyExists";
             }
 
             if (validator.getValid(dragon) == null) {
-                return "Параметры дракона не верны.\n";
+                return "NotValid";
             }
 
             Integer id = dbm.addDragon(dragon, user);
@@ -69,26 +71,22 @@ public class CollectionManager {
                 dragon.setId(id.longValue());
                 dragons.add(dragon);
             } else {
-                return "Ошибка при добавлении дракона в базу данных.";
+                return "DBeror";
             }
         } finally {
             lock.unlock();
         }
-
-        return "Дракон успешно добавлен.\n";
+        Refresher.setDragons(dragons);
+        return "SuccessAdd";
     }
 
-    public static String info(User user) {
+    public static Info info(User user) {
         lock.lock();
         try{
-            return "Тип хранимых данных в коллекции: Dragon\n" +
-                    "Дата и время инициализации: " + creationDate + "\n" +
-                    "Колличество элементов в коллеции: " + dragons.size() + "\n" +
-                    "Драконов принадлежащих вам: " + dragons.stream().filter(d -> d.getUserLogin().equals(user.getLogin())).count();
+            return new Info( dragons.size(), "Dragon", creationDate, dragons.stream().filter(d -> d.getUserLogin().equals(user.getLogin())).count());
         } finally {
             lock.unlock();
         }
-
     }
 
 
@@ -96,7 +94,7 @@ public class CollectionManager {
         lock.lock();
         try{
             if (validator.getValid(updatedDragon) == null) {
-                return "Параметры дракона не верны.\n";
+                return "NotValid.";
             }
 
             Optional<Dragon> existingDragon = dragons.stream()
@@ -108,12 +106,14 @@ public class CollectionManager {
                     dragons.remove(existingDragon.get());
                     updatedDragon.setId(dragonId);
                     dragons.add(updatedDragon);
-                    return "Данные дракона успешно обновлены.\n";
+
+                    Refresher.setDragons(dragons);
+                    return "DragonDataUpdated";
                 } else {
-                    return "Ошибка при добавлении данных в базу данных.";
+                    return "DBerror";
                 }
             } else {
-                return "Дракона с ID " + dragonId + " нет в коллекции или он вам не принадлежит.\n";
+                return "NoSuchDragon";
             }
         } finally {
             lock.unlock();
@@ -132,12 +132,15 @@ public class CollectionManager {
                 if (dbm.removeDragon(dragonId, user)){
                     dragons.remove(dragonToRemove.get());
                 } else {
-                    return "Ошибка при добавлении данных в базу данных.";
+                    Refresher.setDragons(dragons);
+                    return "DBerror";
                 }
 
-                return "Дракон с ID " + dragonId + " успешно удален.\n";
+                Refresher.setDragons(dragons);
+                return "Deleted";
             } else {
-                return "Дракона с ID " + dragonId + " нет в коллекции или он вам не принадлежит.\n";
+                Refresher.setDragons(dragons);
+                return "NoSuchDragon";
             }
         } finally {
             lock.unlock();
@@ -170,13 +173,13 @@ public class CollectionManager {
 
 }
 
-    public static String head() {
+    public static PriorityBlockingQueue<Dragon> head() {
         lock.lock();
         try{
-            return dragons.stream()
-                    .findFirst()
-                    .map(Dragon::toString)
-                    .orElse("Коллекция пуста.\n");
+            PriorityBlockingQueue<Dragon> d = new PriorityBlockingQueue<>();
+            Dragon dragon = dragons.stream().findFirst().orElse(null);
+            d.add(dragon);
+            return d;
         } finally {
             lock.unlock();
         }
@@ -190,11 +193,11 @@ public class CollectionManager {
                     .anyMatch(d -> d.equals(dragon));
 
             if (alreadyExists) {
-                return "Этот дракон уже есть в коллекции.\n";
+                return "AlreadyExists";
             }
 
             if (validator.getValid(dragon) == null) {
-                return "Параметры дракона не верны.\n";
+                return "NotValid";
             }
 
             boolean isMin = dragons.isEmpty() ||
@@ -207,12 +210,13 @@ public class CollectionManager {
                     dragon.setId(id.longValue());
                     dragons.add(dragon);
                 } else {
-                    return "Ошибка при добавлении дракона в базу данных.";
+                    return "DBerror";
                 }
-
-                return "Дракон успешно добавлен.\n";
+                Refresher.setDragons(dragons);
+                return "SuccessAdd";
             } else {
-                return "Данный дракон не имеет минимального значения.\n";
+                Refresher.setDragons(dragons);
+                return "NotMinimal";
             }
         } finally {
             lock.unlock();
@@ -225,7 +229,8 @@ public class CollectionManager {
         lock.lock();
         try{
             if (dragons.isEmpty()) {
-                return "Коллекция драконов пуста.\n";
+                Refresher.setDragons(dragons);
+                return "EmptyCollection";
             }
 
             List<Dragon> toRemove = dragons.stream()
@@ -236,11 +241,14 @@ public class CollectionManager {
                 if (dbm.removeLower(dragon, user)){
                     dragons.removeAll(toRemove);
                 } else {
-                    return "Ошибка в базе данных";
+                    Refresher.setDragons(dragons);
+                    return "DBerror";
                 }
-                return String.format("Удалено %d драконов, меньших чем заданный.\n", toRemove.size());
+                Refresher.setDragons(dragons);
+                return "AllDelited";
             } else {
-                return "Драконов меньше, чем заданный, нет в коллекции или они вам не принадлежат.\n";
+                Refresher.setDragons(dragons);
+                return "NoLower";
             }
         } finally {
             lock.unlock();
@@ -251,21 +259,20 @@ public class CollectionManager {
 
     public static String sumOfAge() {
 
+        if (dragons.isEmpty()) {
+            Refresher.setDragons(dragons);
+            return "no";
+        }
+
         lock.lock();
         try{
-            if (dragons.isEmpty()) {
-                return "В коллекции нет драконов.\n";
-            }
-
-            long sum = dragons.stream()
+            Long sum = dragons.stream()
                     .map(Dragon::getAge)
                     .filter(Objects::nonNull)
                     .mapToLong(Long::longValue)
                     .sum();
 
-            return sum == 0L
-                    ? "Нет данных о возрасте драконов.\n"
-                    : "Суммарный возраст всех драконов: " + sum + "\n";
+            return String.valueOf(sum);
         } finally {
             lock.unlock();
         }
@@ -273,47 +280,33 @@ public class CollectionManager {
     }
 
 
-    public static String filterContainsName(String name) {
+    public static PriorityBlockingQueue filterContainsName(String name) {
         lock.lock();
         try{
-            if (dragons.isEmpty()) {
-                return "Поиск не дал результатов.\n";
-            }
-
-            String result = dragons.stream()
-                    .filter(dragon -> dragon.getName().contains(name))
-                    .map(Dragon::toString)
-                    .collect(Collectors.joining("\n"));
-
-            return result.isEmpty()
-                    ? "Поиск не дал результатов.\n"
-                    : result + "\n";
+            PriorityBlockingQueue<Dragon> result = dragons.stream()
+                    .filter(dragon -> dragon.getName() != null && dragon.getName().contains(name))
+                    .collect(Collectors.toCollection(PriorityBlockingQueue::new));
+            return result;
         } finally {
             lock.unlock();
         }
 
     }
 
-    public static String filterStartsWithName(String name) {
+    public static PriorityBlockingQueue<Dragon> filterStartsWithName(String name) {
         lock.lock();
         try{
             int len = name.length();
 
-            if (dragons.isEmpty()) {
-                return "Поиск не дал результатов.\n";
-            }
-
-            String result = dragons.stream()
+            PriorityBlockingQueue<Dragon> result = dragons.stream()
                     .filter(dragon -> dragon.getName().length() >= len)
                     .filter(dragon -> dragon.getName().substring(0, len).equals(name))
-                    .map(Dragon::toString)
-                    .collect(Collectors.joining("\n"));
+                    .collect(Collectors.toCollection(PriorityBlockingQueue::new));
 
-            return result.isEmpty()
-                    ? "Поиск не дал результатов.\n"
-                    : result + "\n";
+            return result;
         }finally {
             lock.unlock();
         }
     }
+
 }

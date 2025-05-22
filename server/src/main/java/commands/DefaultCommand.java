@@ -25,4 +25,8 @@ public class DefaultCommand implements Command, Serializable {
     public String getCommandName() {
         return "";
     }
+
+    public boolean requiresRefresh() {
+        return false;
+    }
 }

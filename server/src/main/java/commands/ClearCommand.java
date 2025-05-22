@@ -36,4 +36,8 @@ public class ClearCommand implements Command, Serializable {
     public String getCommandName() {
         return "clear";
     }
+
+    public boolean requiresRefresh() {
+        return true;
+    }
 }

@@ -31,4 +31,23 @@ public enum BrightColor implements Serializable {
             return null;
         }
     }
+
+    @Override
+    public String toString() {
+        switch (this) {
+            case GREEN:
+                return "Green";
+            case BLACK:
+                return "Black";
+            case BLUE:
+                return "Blue";
+            case YELLOW:
+                return "Yellow";
+            case ORANGE:
+                return "Orange";
+            default:
+                return "None";
+        }
+    }
+
 }

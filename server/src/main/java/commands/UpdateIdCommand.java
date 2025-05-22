@@ -34,11 +34,16 @@ public class UpdateIdCommand implements Command, Serializable {
 
     @Override
     public Response execute() {
+        System.out.println(dragon);
         return new Response(ResponseStatus.OK, CollectionManager.updateById(id, dragon, user), CommandResponse.UPDATE);
     }
 
     @Override
     public String getCommandName(){
         return "update";
+    }
+
+    public boolean requiresRefresh() {
+        return true;
     }
 }
