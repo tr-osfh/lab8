@@ -317,9 +317,11 @@ public class AddDragonWindow {
                     Client.getUser().getLogin()
             );
             stage.close();
-        } else {
-            DialogManager.alert(errors, localizer);
-        }}
+            } else {
+                System.out.println(123);
+                DialogManager.alert(errors, localizer);
+            }
+        }
     }
 
     @FXML

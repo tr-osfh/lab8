@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
+<?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
@@ -58,6 +60,9 @@
             <TableColumn fx:id="zLocationColoumn" prefWidth="50.0" text="Z" />
             <TableColumn fx:id="locationNameColoumn" minWidth="0.0" prefWidth="100.0" text="Место" />
         </columns>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </TableView>
       <GridPane layoutX="14.0" layoutY="7.0" prefHeight="45.0" prefWidth="788.0">
         <columnConstraints>
@@ -88,6 +93,12 @@
              <ComboBox fx:id="languageComboBox" prefHeight="61.0" prefWidth="139.0" promptText="Язык" GridPane.columnIndex="4" />
          </children>
       </GridPane>
-      <Pane layoutX="817.0" layoutY="14.0" prefHeight="618.0" prefWidth="469.0" style="-fx-background-color: a3cdf8;" />
+      <Pane fx:id="dragonBase" layoutX="817.0" layoutY="14.0" prefHeight="618.0" prefWidth="469.0" style="-fx-background-color: a3cdf8;">
+         <cursor>
+            <Cursor fx:constant="OPEN_HAND" />
+         </cursor>
+         <children>
+            <Canvas fx:id="dragonCanvas" height="618.0" width="469.0" />
+         </children></Pane>
    </children>
 </AnchorPane>

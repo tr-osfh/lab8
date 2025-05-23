@@ -4,18 +4,22 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.Comparator;
+import java.util.stream.Collectors;
 
 import commands.*;
-import connection.Client;
-import connection.CommandResponse;
-import connection.Response;
-import connection.ResponseStatus;
+import connection.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import seClasses.Dragon;
@@ -26,6 +30,10 @@ public class MainWindow extends Window {
     private AddDragonWindow addDragonWindow;
     private Timeline refreshTimer;
     private boolean isFiltered = false;
+    private Dragon clickedDragon;
+    private HashMap<String, Color> colors = new HashMap<>();
+    private Random random = new Random();
+    private GraphicsContext gc;
 
     private Localizer localizer;
     private final HashMap<String, Locale> localeHashMap = new HashMap<>() {{
@@ -118,10 +126,16 @@ public class MainWindow extends Window {
     private TableColumn<Dragon, Double> zLocationColoumn;
     @FXML
     private TableColumn<Dragon, String> locationNameColoumn;
+    @FXML
+    private Canvas dragonCanvas;
+    @FXML
+    private Pane dragonBase;
+
 
 
     @FXML
     void initialize() {
+        gc = dragonCanvas.getGraphicsContext2D();
         localizer = MainApp.getLocalizer();
         setCollection(Client.getDragons());
 
@@ -164,7 +178,8 @@ public class MainWindow extends Window {
             var row = new TableRow<Dragon>();
             row.setOnMouseClicked(mouseEvent -> {
                 if (mouseEvent.getClickCount() == 2 && !row.isEmpty()) {
-                    Dragon clickedDragon = row.getItem();
+                    clickedDragon = row.getItem();
+
                 }
             });
             return row;
@@ -261,12 +276,43 @@ public class MainWindow extends Window {
         refreshTimer.setCycleCount(Timeline.INDEFINITE);
         refreshTimer.play();
 
+        dragonCanvas.widthProperty().bind(dragonBase.widthProperty());
+        dragonCanvas.heightProperty().bind(dragonBase.heightProperty());
+
+
+
     }
 
 
     @FXML
-    public void help(
-    ) {
+    public void help() {
+        Command upd = new HelpCommand(Client.getUser());
+        Client.setCommand(upd);
+        try {
+            int attempts = 0;
+            Response response = null;
+            while (attempts < 20) {
+                response = Client.getResponse();
+                if (response != null && response.getType().equals(CommandResponse.HELP)) {
+                    break;
+                }
+                Thread.sleep(100);
+                attempts++;
+            }
+            if (response == null) {
+                DialogManager.alert("TimeoutError", localizer);
+                return;
+            }
+            if (response.getResponseStatus().equals(ResponseStatus.OK) && response.getType().equals(CommandResponse.HELP)) {
+                DialogManager.help("HelpBtn", response.getCommandCollection().stream()
+                        .map(element -> localizer.getKeyString(element)).collect(Collectors.joining("\n")), localizer);
+
+            } else {
+                DialogManager.alert("Error", localizer);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
@@ -359,10 +405,10 @@ public class MainWindow extends Window {
                     return;
                 }
 
-                if (response.getResponseStatus().equals(ResponseStatus.OK) && response.equals(CommandResponse.ADD)) {
+                if (response.getResponseStatus().equals(ResponseStatus.OK) && response.getType().equals(CommandResponse.ADD)) {
                     DialogManager.inform("Info", localizer.getKeyString(response.getResponse()), localizer);
                 } else {
-                    System.out.println(response.getResponseStatus());
+                    System.out.println("debil");
                     DialogManager.alert("Error", localizer);
                 }
             } catch (InterruptedException e) {
@@ -387,7 +433,7 @@ public class MainWindow extends Window {
                 Response response = null;
                 while (attempts < 20) {
                     response = Client.getResponse();
-                    if (response != null && response.getType().equals(CommandResponse.ADD)) {
+                    if (response != null && response.getType().equals(CommandResponse.ADD_IF_MIN)) {
                         break;
                     }
                     Thread.sleep(100);
@@ -412,8 +458,15 @@ public class MainWindow extends Window {
     @FXML
     public void update() {
         long ID;
+        Long id;
         Dragon dragon;
-        Long id = DialogManager.getId(localizer);
+        if (clickedDragon == null){
+            id = DialogManager.getId(localizer);
+        } else {
+            id = clickedDragon.getId();
+            clickedDragon = null;
+        }
+
         if (id != null) {
             ID = id;
             dragon = Client.getDragons().stream()
@@ -510,10 +563,16 @@ public class MainWindow extends Window {
 
     @FXML
     public void removeById() {
-
         long ID;
+        Long id;
         Dragon dragon;
-        Long id = DialogManager.getId(localizer);
+        if (clickedDragon == null){
+            id = DialogManager.getId(localizer);
+        } else {
+            id = clickedDragon.getId();
+            clickedDragon = null;
+        }
+
         if (id != null) {
             ID = id;
             dragon = Client.getDragons().stream()
@@ -679,7 +738,71 @@ public class MainWindow extends Window {
 
     @FXML
     public void clear(){
+        Command upd = new ClearCommand(Client.getUser());
+        Client.setCommand(upd);
+        try {
+            int attempts = 0;
+            Response response = null;
+            while (attempts < 20) {
+                response = Client.getResponse();
+                if (response != null && response.getType().equals(CommandResponse.CLEAR)) {
+                    break;
+                }
+                Thread.sleep(100);
+                attempts++;
+            }
+            if (response == null) {
+                DialogManager.alert("TimeoutError", localizer);
+                return;
+            }
+            if (response.getResponseStatus().equals(ResponseStatus.OK) && response.getType().equals(CommandResponse.CLEAR)) {
+                DialogManager.inform("Info", localizer.getKeyString(response.getResponse()), localizer);
+            } else {
+                DialogManager.alert("Error", localizer);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    private double normalize(double value, double scale) {
+        return (2.0 / Math.PI) * Math.atan(value / scale);
+    }
+
+
+    private void drawVisual(List<Dragon> lDragons){
+        gc.clearRect(0, 0, dragonCanvas.getWidth(), dragonCanvas.getHeight());
+
+        double canvasWidth = dragonCanvas.getWidth();
+        double canvasHeight = dragonCanvas.getHeight();
+        double centerX = canvasWidth / 2;
+        double centerY = canvasHeight / 2;
+
+        DragonVisual.setCanvasHeight(canvasHeight);
+        DragonVisual.setCanvasWidth(canvasWidth);
+
+        double scale = 200;
+
+        for (Dragon dragon : lDragons) {
+            String owner = dragon.getUserLogin();
+            if (!colors.containsKey(owner)) {
+                double hue = random.nextDouble() * 360;
+                double saturation = 0.7 + random.nextDouble() * (1 - 0.7);
+                double brightness = 0.8 + random.nextDouble() * (1 - 0.8);
+                colors.put(owner, Color.hsb(hue, saturation, brightness));
+            }
+
+            var size = Math.min((dragon.getAge() == null) ? 30 : dragon.getAge() * 10, 100);
+
+            double xNorm = normalize(dragon.getCoordinates().getX(), scale);
+            double yNorm = normalize(dragon.getCoordinates().getY(), scale);
+
+            double x = (xNorm + 1.0) / 2.0 * canvasWidth;
+            double y = (yNorm + 1.0) / 2.0 * canvasHeight;
+
+            DragonVisual.draw(gc, size, x, y);
+
+        }
     }
 
     public void setListener(SceneSwitchObserver listener) {
@@ -708,6 +831,9 @@ public class MainWindow extends Window {
         dragonTable.getSortOrder().clear();
         dragonTable.getSortOrder().add(idColoumn);
         dragonTable.sort();
+
+        drawVisual(sortedDragons);
+
     }
 
     private void changeLanguage(){

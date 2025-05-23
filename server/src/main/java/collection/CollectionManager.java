@@ -160,12 +160,16 @@ public class CollectionManager {
             List<Dragon> toRemove = dragons.stream()
                     .filter(d -> d.getUserLogin().equals(user.getLogin()))
                     .collect(Collectors.toList());
-
+            if (toRemove.isEmpty()) {
+                Refresher.setDragons(dragons);
+                return "NoOneToClear";
+            }
             if (dbm.clear(user)){
                 dragons.removeAll(toRemove);
-                return "Коллекция очищена.\n";
+                Refresher.setDragons(dragons);
+                    return "SuccessClear";
             } else {
-                return "Ошибка при обновлении данных.";
+                return "DBerror";
             }
         } finally {
             lock.unlock();

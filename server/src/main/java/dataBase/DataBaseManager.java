@@ -48,7 +48,7 @@ public class DataBaseManager {
                 addUser.execute();
                 return new Response(ResponseStatus.OK, "Вы создали аккаунт " + user.getLogin(), CommandResponse.REGISTRATION);
             } else {
-                return new Response(ResponseStatus.OK, "Пользователь с логином " + user.getLogin() + " уже существует.", CommandResponse.REGISTRATION);
+                return new Response(ResponseStatus.ERROR, "Пользователь с логином " + user.getLogin() + " уже существует.", CommandResponse.REGISTRATION);
             }
         } catch (SQLException | NullPointerException e) {
             ServerLogger.getLogger().warning("Ошибка подключения к базе данных. ");

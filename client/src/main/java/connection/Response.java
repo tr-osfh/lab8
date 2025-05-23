@@ -5,6 +5,7 @@ import seClasses.Info;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Objects;
@@ -15,6 +16,7 @@ public class Response implements Serializable {
     @Serial
     private static final long serialVersionUID = 22L;
 
+    private ArrayList<String> comandCollection;
     private ResponseStatus responseStatus;
     private String response = "";
     private Collection<Dragon> collection;
@@ -22,6 +24,7 @@ public class Response implements Serializable {
     private User user;
     private Info info;
     private PriorityBlockingQueue<Dragon> dragons;
+
 
     public Response(){}
 
@@ -97,7 +100,9 @@ public class Response implements Serializable {
         return collection;
     }
 
-
+    public ArrayList<String> getCommandCollection() {
+        return comandCollection;
+    }
 
     public Info getInfo() {
         return info;

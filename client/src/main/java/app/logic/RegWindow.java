@@ -1,10 +1,7 @@
 package app.logic;
 
 import commands.RegistrationCommand;
-import connection.Client;
-import connection.Response;
-import connection.ResponseStatus;
-import connection.User;
+import connection.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXML;
@@ -84,13 +81,26 @@ public class RegWindow {
         User user = new User(loginField.getText(), passwordField.getText());
         RegistrationCommand rc = new RegistrationCommand(user);
         Client.setCommand(rc);
-        Thread.sleep(100);
+        int attempts = 0;
+        Response response = null;
+        while (attempts < 20) {
+            response = Client.getResponse();
+            if (response != null && response.getType().equals(CommandResponse.REGISTRATION)) {
+                break;
+            }
+            Thread.sleep(100);
+            attempts++;
+        }
+        if (response == null){
+            DialogManager.alert("Error", localizer);
+            return;
+        }
         try{
-            Response response = Client.getResponse();
             if (response.getResponseStatus().equals(ResponseStatus.OK)){
-                Client.setUser(user);
+                DialogManager.inform("Info", localizer.getKeyString("SuccessReg") + user.getLogin(), localizer);
+                callback.run();
             } else {
-                DialogManager.alert("RegistrationError", localizer);
+                DialogManager.inform("Info", localizer.getKeyString("UnableToReg") + user.getLogin(), localizer);
             }
         } catch (Exception e){
             DialogManager.alert("RegistrationError", localizer);

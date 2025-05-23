@@ -28,8 +28,8 @@ public class ClearCommand implements Command, Serializable {
 
     @Override
     public Response execute() {
-        CollectionManager.clear(user);
-        return new Response(ResponseStatus.OK, "Коллекция успешно удалена.", CommandResponse.CLEAR);
+
+        return new Response(ResponseStatus.OK, CollectionManager.clear(user), CommandResponse.CLEAR);
     }
 
     @Override

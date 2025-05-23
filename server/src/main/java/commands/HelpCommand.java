@@ -9,6 +9,7 @@ import connection.User;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -32,13 +33,12 @@ public class HelpCommand implements Command, Serializable {
 
     @Override
     public Response execute() {
-        return new Response(
-                ResponseStatus.OK,
-                Arrays.stream(CommandsList.CommandType.values())
-                        .map(CommandsList.CommandType::getDescription)
-                        .filter(description -> !description.isEmpty())
-                        .collect(Collectors.joining("\n")), CommandResponse.HELP
-        );
+        ArrayList<String> descriptions = Arrays.stream(CommandsList.CommandType.values())
+                .map(CommandsList.CommandType::getDescription)
+                .filter(description -> !description.isEmpty())
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        return new Response(ResponseStatus.OK, descriptions, CommandResponse.HELP);
     }
     /**
      * Возвращает описание команды для системы помощи

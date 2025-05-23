@@ -16,6 +16,7 @@ public class DialogManager {
     private static ErrorWindow errorWindow;
     private static InfoWindow infoWindow;
     private static DialogWindow dialogWindow;
+    private static HelpWindow helpWindow;
 
     static{
         FXMLLoader errorLoader = new FXMLLoader(DialogManager.class.getResource("/markup/error.fxml"));
@@ -47,6 +48,16 @@ public class DialogManager {
         dialogStage.setResizable(false);
         dialogWindow = dialogLoader.getController();
         dialogWindow.setStage(dialogStage);
+
+        FXMLLoader helpLoader = new FXMLLoader(DialogManager.class.getResource("/markup/help.fxml"));
+        Parent helpRoot = loadFxml(helpLoader);
+        Scene helpScene = new Scene(helpRoot);
+        Stage helpStage = new Stage();
+        helpStage.initModality(Modality.APPLICATION_MODAL);
+        helpStage.setScene(helpScene);
+        helpStage.setResizable(false);
+        helpWindow = helpLoader.getController();
+        helpWindow.setStage(helpStage);
     }
 
     public static void alert(String title, Localizer localizer){
@@ -59,6 +70,10 @@ public class DialogManager {
 
     public static void inform(String title, String txt, Localizer localizer){
         infoWindow.inform(localizer.getKeyString(title), txt); //todo Сюда прилетает респонс, который надо декодировать
+    }
+
+    public static void help(String title, String txt, Localizer localizer){
+        helpWindow.help(localizer.getKeyString(title), txt);
     }
 
     public static Long getId(Localizer localizer){
