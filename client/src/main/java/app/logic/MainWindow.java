@@ -10,7 +10,6 @@ import commands.*;
 import connection.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -19,11 +18,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import seClasses.Dragon;
-import seClasses.DragonType;
 
 public class MainWindow extends Window {
     private SceneSwitchObserver listener;
@@ -34,6 +31,7 @@ public class MainWindow extends Window {
     private HashMap<String, Color> colors = new HashMap<>();
     private Random random = new Random();
     private GraphicsContext gc;
+    private List<DragonHitBox> dragonHitBoxes = new ArrayList<>();
 
     private Localizer localizer;
     private final HashMap<String, Locale> localeHashMap = new HashMap<>() {{
@@ -278,7 +276,20 @@ public class MainWindow extends Window {
 
         dragonCanvas.widthProperty().bind(dragonBase.widthProperty());
         dragonCanvas.heightProperty().bind(dragonBase.heightProperty());
+        dragonCanvas.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                double mouseX = event.getX();
+                double mouseY = event.getY();
 
+                for (DragonHitBox hitBox : dragonHitBoxes) {
+                    if (hitBox.contains(mouseX, mouseY)) {
+                        Dragon selectedDragon = hitBox.getDragon();
+                        dragonClick(selectedDragon);
+                        break;
+                    }
+                }
+            }
+        });
 
 
     }
@@ -773,10 +784,8 @@ public class MainWindow extends Window {
     private void drawVisual(List<Dragon> lDragons){
         gc.clearRect(0, 0, dragonCanvas.getWidth(), dragonCanvas.getHeight());
 
-        double canvasWidth = dragonCanvas.getWidth();
-        double canvasHeight = dragonCanvas.getHeight();
-        double centerX = canvasWidth / 2;
-        double centerY = canvasHeight / 2;
+        double canvasWidth = dragonCanvas.getWidth() - 100;
+        double canvasHeight = dragonCanvas.getHeight() - 100;
 
         DragonVisual.setCanvasHeight(canvasHeight);
         DragonVisual.setCanvasWidth(canvasWidth);
@@ -784,6 +793,7 @@ public class MainWindow extends Window {
         double scale = 200;
 
         for (Dragon dragon : lDragons) {
+
             String owner = dragon.getUserLogin();
             if (!colors.containsKey(owner)) {
                 double hue = random.nextDouble() * 360;
@@ -792,7 +802,7 @@ public class MainWindow extends Window {
                 colors.put(owner, Color.hsb(hue, saturation, brightness));
             }
 
-            var size = Math.min((dragon.getAge() == null) ? 30 : dragon.getAge() * 10, 100);
+            var size = Math.min(Math.max(30, (dragon.getWeight() == null) ? 30 : dragon.getWeight() * 5), 100);
 
             double xNorm = normalize(dragon.getCoordinates().getX(), scale);
             double yNorm = normalize(dragon.getCoordinates().getY(), scale);
@@ -800,7 +810,9 @@ public class MainWindow extends Window {
             double x = (xNorm + 1.0) / 2.0 * canvasWidth;
             double y = (yNorm + 1.0) / 2.0 * canvasHeight;
 
-            DragonVisual.draw(gc, size, x, y);
+            double radius = size / 2.0;
+            dragonHitBoxes.add(new DragonHitBox(dragon, x, y, radius));
+            DragonVisual.draw(gc, size, x + radius, y, colors.get(owner));
 
         }
     }
@@ -869,5 +881,12 @@ public class MainWindow extends Window {
         yLocationColoumn.setText(localizer.getKeyString("LocationY"));
         zLocationColoumn.setText(localizer.getKeyString("LocationZ"));
         locationNameColoumn.setText(localizer.getKeyString("Place"));
+    }
+
+    private void dragonClick(Dragon dragon) {
+        clickedDragon = dragon;
+        PriorityQueue<Dragon> dragons = new PriorityQueue<>();
+        dragons.add(dragon);
+        setCollection(dragons);
     }
 }
