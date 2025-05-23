@@ -679,33 +679,7 @@ public class MainWindow extends Window {
 
     @FXML
     public void clear(){
-        Command upd = new ClearCommand(Client.getUser());
-        Client.setCommand(upd);
-        try {
-            int attempts = 0;
-            Response response = null;
-            while (attempts < 20) {
-                response = Client.getResponse();
-                if (response != null && response.getType().equals(CommandResponse.CLEAR)) {
-                    break;
-                }
-                Thread.sleep(100);
-                attempts++;
-            }
-            if (response == null) {
-                DialogManager.alert("TimeoutError", localizer);
-                return;
-            }
-            if (response.getResponseStatus().equals(ResponseStatus.OK) && response.getType().equals(CommandResponse.CLEAR)) {
-                DialogManager.inform("Info", response.getResponse(), localizer);
-            } else if (response.getResponseStatus().equals(ResponseStatus.ERROR) && response.getType().equals(CommandResponse.SUM_OF_AGE)) {
-                DialogManager.inform("Info", localizer.getKeyString("NoAgeData"), localizer);
-            } else {
-                DialogManager.alert("Error", localizer);
-            }
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+
     }
 
     public void setListener(SceneSwitchObserver listener) {

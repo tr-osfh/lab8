@@ -163,14 +163,9 @@ public class CollectionManager {
 
             if (dbm.clear(user)){
                 dragons.removeAll(toRemove);
-                if (toRemove.isEmpty()){
-                    return "NoDragonsCleared";
-                } else {
-                    Refresher.setDragons(dragons);
-                    return "ClearSuccess";
-                }
+                return "Коллекция очищена.\n";
             } else {
-                return "DBerror";
+                return "Ошибка при обновлении данных.";
             }
         } finally {
             lock.unlock();
