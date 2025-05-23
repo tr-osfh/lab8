@@ -2,9 +2,9 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2025-05-22T19:33:58.833461200Z</date>
-  <millis>1747942438833</millis>
-  <nanos>461200</nanos>
+  <date>2025-05-23T09:19:57.566280900Z</date>
+  <millis>1747991997566</millis>
+  <nanos>280900</nanos>
   <sequence>0</sequence>
   <logger>collection.ServerLogger</logger>
   <level>INFO</level>
@@ -14,21 +14,21 @@
   <message>Сервер запущен на порту 21214</message>
 </record>
 <record>
-  <date>2025-05-22T19:34:04.801362500Z</date>
-  <millis>1747942444801</millis>
-  <nanos>362500</nanos>
+  <date>2025-05-23T09:20:04.965708200Z</date>
+  <millis>1747992004965</millis>
+  <nanos>708200</nanos>
   <sequence>1</sequence>
   <logger>collection.ServerLogger</logger>
   <level>INFO</level>
   <class>connection.Server</class>
   <method>handleClientConnection</method>
   <thread>1</thread>
-  <message>Подключен клиент: /192.168.56.1:50454</message>
+  <message>Подключен клиент: /192.168.56.1:52180</message>
 </record>
 <record>
-  <date>2025-05-22T19:34:10.594870300Z</date>
-  <millis>1747942450594</millis>
-  <nanos>870300</nanos>
+  <date>2025-05-23T09:20:11.470626800Z</date>
+  <millis>1747992011470</millis>
+  <nanos>626800</nanos>
   <sequence>2</sequence>
   <logger>collection.ServerLogger</logger>
   <level>INFO</level>
@@ -39,68 +39,28 @@
 От пользователя: User{login='123'}</message>
 </record>
 <record>
-  <date>2025-05-22T19:34:15.660676700Z</date>
-  <millis>1747942455660</millis>
-  <nanos>676700</nanos>
+  <date>2025-05-23T09:20:17.577562600Z</date>
+  <millis>1747992017577</millis>
+  <nanos>562600</nanos>
   <sequence>3</sequence>
   <logger>collection.ServerLogger</logger>
   <level>INFO</level>
   <class>connection.ProcessCommand</class>
   <method>run</method>
   <thread>22</thread>
-  <message>Получена команда: sum_of_age
+  <message>Получена команда: clear
 От пользователя: User{login='123'}</message>
 </record>
 <record>
-  <date>2025-05-22T19:35:26.196522100Z</date>
-  <millis>1747942526196</millis>
-  <nanos>522100</nanos>
+  <date>2025-05-23T09:20:53.783647200Z</date>
+  <millis>1747992053783</millis>
+  <nanos>647200</nanos>
   <sequence>4</sequence>
   <logger>collection.ServerLogger</logger>
   <level>INFO</level>
   <class>connection.ProcessCommand</class>
   <method>run</method>
   <thread>23</thread>
-  <message>Получена команда: remove_by_id
+  <message>Получена команда: clear
 От пользователя: User{login='123'}</message>
 </record>
-<record>
-  <date>2025-05-22T19:36:01.541196600Z</date>
-  <millis>1747942561541</millis>
-  <nanos>196600</nanos>
-  <sequence>5</sequence>
-  <logger>collection.ServerLogger</logger>
-  <level>INFO</level>
-  <class>connection.ProcessCommand</class>
-  <method>run</method>
-  <thread>27</thread>
-  <message>Получена команда: filter_contains_name
-От пользователя: User{login='123'}</message>
-</record>
-<record>
-  <date>2025-05-22T19:36:04.663032300Z</date>
-  <millis>1747942564663</millis>
-  <nanos>32300</nanos>
-  <sequence>6</sequence>
-  <logger>collection.ServerLogger</logger>
-  <level>INFO</level>
-  <class>connection.ProcessCommand</class>
-  <method>run</method>
-  <thread>28</thread>
-  <message>Получена команда: filter_starts_with_name
-От пользователя: User{login='123'}</message>
-</record>
-<record>
-  <date>2025-05-22T19:36:15.106390700Z</date>
-  <millis>1747942575106</millis>
-  <nanos>390700</nanos>
-  <sequence>7</sequence>
-  <logger>collection.ServerLogger</logger>
-  <level>INFO</level>
-  <class>connection.ProcessCommand</class>
-  <method>run</method>
-  <thread>29</thread>
-  <message>Получена команда: filter_contains_name
-От пользователя: User{login='123'}</message>
-</record>
-</log>
