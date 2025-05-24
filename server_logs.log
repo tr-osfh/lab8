@@ -2,9 +2,9 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2025-05-24T10:27:03.851684300Z</date>
-  <millis>1748082423851</millis>
-  <nanos>684300</nanos>
+  <date>2025-05-24T21:00:19.513401700Z</date>
+  <millis>1748120419513</millis>
+  <nanos>401700</nanos>
   <sequence>0</sequence>
   <logger>collection.ServerLogger</logger>
   <level>INFO</level>
@@ -14,53 +14,52 @@
   <message>Сервер запущен на порту 21214</message>
 </record>
 <record>
-  <date>2025-05-24T10:27:08.071646300Z</date>
-  <millis>1748082428071</millis>
-  <nanos>646300</nanos>
+  <date>2025-05-24T21:00:19.733417400Z</date>
+  <millis>1748120419733</millis>
+  <nanos>417400</nanos>
   <sequence>1</sequence>
   <logger>collection.ServerLogger</logger>
   <level>INFO</level>
   <class>connection.Server</class>
   <method>handleClientConnection</method>
   <thread>1</thread>
-  <message>Подключен клиент: /192.168.56.1:62582</message>
+  <message>Подключен клиент: /192.168.56.1:58886</message>
 </record>
 <record>
-  <date>2025-05-24T10:27:13.525591Z</date>
-  <millis>1748082433525</millis>
-  <nanos>591000</nanos>
+  <date>2025-05-24T21:00:22.812507200Z</date>
+  <millis>1748120422812</millis>
+  <nanos>507200</nanos>
   <sequence>2</sequence>
   <logger>collection.ServerLogger</logger>
   <level>INFO</level>
-  <class>connection.ProcessCommand</class>
-  <method>run</method>
-  <thread>20</thread>
-  <message>Получена команда: authorization
-От пользователя: User{login='123'}</message>
+  <class>connection.Server</class>
+  <method>handleClientConnection</method>
+  <thread>1</thread>
+  <message>Подключен клиент: /192.168.56.1:58891</message>
 </record>
 <record>
-  <date>2025-05-24T10:27:33.260471600Z</date>
-  <millis>1748082453260</millis>
-  <nanos>471600</nanos>
+  <date>2025-05-24T21:01:21.161940600Z</date>
+  <millis>1748120481161</millis>
+  <nanos>940600</nanos>
   <sequence>3</sequence>
   <logger>collection.ServerLogger</logger>
   <level>INFO</level>
   <class>connection.ProcessCommand</class>
   <method>run</method>
-  <thread>22</thread>
-  <message>Получена команда: execute_script
+  <thread>21</thread>
+  <message>Получена команда: info
 От пользователя: User{login='123'}</message>
 </record>
 <record>
-  <date>2025-05-24T10:28:39.102723200Z</date>
-  <millis>1748082519102</millis>
-  <nanos>723200</nanos>
+  <date>2025-05-24T21:01:30.321500100Z</date>
+  <millis>1748120490321</millis>
+  <nanos>500100</nanos>
   <sequence>4</sequence>
   <logger>collection.ServerLogger</logger>
   <level>INFO</level>
   <class>connection.ProcessCommand</class>
   <method>run</method>
   <thread>23</thread>
-  <message>Получена команда: execute_script
+  <message>Получена команда: help
 От пользователя: User{login='123'}</message>
 </record>

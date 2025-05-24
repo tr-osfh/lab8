@@ -3,6 +3,7 @@ package app.logic;
 import commands.AuthorizationCommand;
 import commands.RegistrationCommand;
 import connection.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -11,9 +12,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class AuthWindow {
+public class AuthWindow implements DisconnectListener{
     private Runnable callback;
     private Localizer localizer;
+    private ConnectionErrorWindow connectWindow;
     private final HashMap<String, Locale> localeHashMap = new HashMap<>() {{
         put("Русский", new Locale("ru")); //todo добавить остальные языки
         put("Español", new Locale("es", "DOM"));
@@ -41,14 +43,18 @@ public class AuthWindow {
 
     @FXML
     void initialize(){
+        this.localizer = MainApp.getLocalizer();
+        changeLanguage();
         languageComboBox.setItems(FXCollections.observableArrayList(localeHashMap.keySet()));
         languageComboBox.setValue(Client.getLanguage());
         languageComboBox.setStyle("-fx-font: 12px \"Arial\";");
         languageComboBox.setOnAction(event -> {
             var newLanguage = languageComboBox.getValue();
-            localizer.setResourceBundle(ResourceBundle.getBundle("locales/gui", localeHashMap.get(newLanguage)));
-            Client.setLanguage(newLanguage);
+            Locale locale = localeHashMap.get(newLanguage);
+            localizer.setLocale(locale);
+            MainApp.setLocalizer(this.localizer);
             changeLanguage();
+            Client.setLanguage(newLanguage);
         });
     }
 
@@ -87,6 +93,7 @@ public class AuthWindow {
             if (response.getResponseStatus().equals(ResponseStatus.OK)){
                 System.out.println("Aga");
                 Client.setUser(response.getUser());
+                Client.removeDisconnectListener(this);
                 callback.run();
             } else {
                 DialogManager.alert("NoSuchUser", localizer);
@@ -97,6 +104,7 @@ public class AuthWindow {
         }
 
     }
+
 
     public Localizer getLocalizer() {
         return localizer;
@@ -112,5 +120,23 @@ public class AuthWindow {
 
     public void setCallback(Runnable callback) {
         this.callback = callback;
+    }
+
+    public void setConnectionError(ConnectionErrorWindow connectWindow) {
+        this.connectWindow = connectWindow;
+    }
+
+    @Override
+    public void disconnect() {
+        connectWindow.show();
+    }
+
+    @Override
+    public void connect(){
+
+        Platform.runLater(() -> {
+            connectWindow.close();
+            DialogManager.inform("Info", "Reconnected", localizer);
+        });
     }
 }

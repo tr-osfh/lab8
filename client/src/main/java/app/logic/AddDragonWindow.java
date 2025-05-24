@@ -479,6 +479,7 @@ public class AddDragonWindow {
 
     public void show(){
         this.localizer = MainApp.getLocalizer();
+        changeLanguage();
         if (!stage.isShowing()){
             stage.showAndWait();
         }

@@ -30,6 +30,8 @@ public class DialogManager {
         errorWindow.alert(localizer.getKeyString("Error"), localizer.getKeyString(title));
     }
 
+
+
     public static void alert(ArrayList<String> errors, Localizer localizer){
         ErrorWindow errorWindow;
         FXMLLoader errorLoader = new FXMLLoader(DialogManager.class.getResource("/markup/error.fxml"));
@@ -55,7 +57,7 @@ public class DialogManager {
         infoStage.setResizable(false);
         infoWindow = infoLoader.getController();
         infoWindow.setStage(infoStage);
-        infoWindow.inform(localizer.getKeyString(title), txt); //todo Сюда прилетает респонс, который надо декодировать
+        infoWindow.inform(localizer.getKeyString(title), txt);
     }
 
     public static void help(String title, String txt, Localizer localizer){

@@ -2,6 +2,7 @@ package app.logic;
 
 import commands.RegistrationCommand;
 import connection.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXML;
@@ -11,9 +12,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class RegWindow {
+public class RegWindow implements DisconnectListener{
     private Runnable callback;
     private Localizer localizer;
+    private ConnectionErrorWindow connectionErrorWindow;
     private final HashMap<String, Locale> localeHashMap = new HashMap<>() {{
         put("Русский", new Locale("ru")); //todo добавить остальные языки
         put("Español", new Locale("es", "DOM"));
@@ -47,14 +49,18 @@ public class RegWindow {
 
     @FXML
     void initialize(){
+        this.localizer = MainApp.getLocalizer();
+        changeLanguage();
         languageComboBox.setItems(FXCollections.observableArrayList(localeHashMap.keySet()));
         languageComboBox.setValue(Client.getLanguage());
         languageComboBox.setStyle("-fx-font: 12px \"Arial\";");
         languageComboBox.setOnAction(event -> {
             var newLanguage = languageComboBox.getValue();
-            localizer.setResourceBundle(ResourceBundle.getBundle("locales/gui", localeHashMap.get(newLanguage)));
-            Client.setLanguage(newLanguage);
+            Locale locale = localeHashMap.get(newLanguage);
+            localizer.setLocale(locale);
+            MainApp.setLocalizer(this.localizer);
             changeLanguage();
+            Client.setLanguage(newLanguage);
         });
     }
 
@@ -99,6 +105,7 @@ public class RegWindow {
             if (response.getResponseStatus().equals(ResponseStatus.OK)){
                 DialogManager.inform("Info", localizer.getKeyString("SuccessReg") + user.getLogin(), localizer);
                 callback.run();
+                Client.removeDisconnectListener(this);
             } else {
                 DialogManager.inform("Info", localizer.getKeyString("UnableToReg") + user.getLogin(), localizer);
             }
@@ -121,5 +128,23 @@ public class RegWindow {
 
     public void setCallback(Runnable callback) {
         this.callback = callback;
+    }
+
+    public void setConnectionError(ConnectionErrorWindow connectionError){
+        this.connectionErrorWindow = connectionError;
+    }
+
+    @Override
+    public void disconnect() {
+
+        connectionErrorWindow.show();
+    }
+
+    @Override
+    public void connect(){
+        Platform.runLater(() -> {
+            connectionErrorWindow.close();
+            DialogManager.inform("Info", "Reconnected", localizer);
+        });
     }
 }

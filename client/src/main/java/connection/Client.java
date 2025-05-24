@@ -1,5 +1,6 @@
 package connection;
 
+import app.logic.DisconnectListener;
 import commands.Command;
 import commands.CommandsList;
 import commands.ExecuteScriptCommand;
@@ -16,6 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.PriorityQueue;
 import java.util.concurrent.BlockingQueue;
@@ -27,7 +29,7 @@ public class Client {
     private Selector selector;
     private ConsoleReader cr;
     private static Command  pendingCommand;
-    private boolean isConnected = false;
+    private static boolean isConnected = false;
     private boolean isWaitingForResponse = false;
     private boolean running = true;
     private boolean connectionProblem = true;
@@ -36,6 +38,7 @@ public class Client {
     private static volatile Response mainResponse;
     private static PriorityQueue<Dragon> dragons = new PriorityQueue<>();
     private static volatile boolean needRefresh = false;
+    private static ArrayList<DisconnectListener> disconnectListeners = new ArrayList<>();
     public Client(String serverAddress, int port) {
         this.serverAddress = serverAddress;
         this.port = port;
@@ -56,7 +59,6 @@ public class Client {
         if (connectionProblem && !isConnected){
             try {
                 connect();
-                System.out.println();
             } catch (IOException e) {
                 e.printStackTrace();
                 try {
@@ -118,15 +120,11 @@ public class Client {
         SelectionKey key = socketChannel.keyFor(selector);
 
         try {
-            System.out.print("Ошибка подключения. Повторная попытка");
-            Thread.sleep(1000);
-            System.out.print('.');
-            Thread.sleep(1000);
-            System.out.print('.');
-            Thread.sleep(1000);
-            System.out.println('.');
+            Thread.sleep(5000);
             connect();
-            connectionProblem = true;
+            for (DisconnectListener listener : disconnectListeners){
+                listener.disconnect();
+            }
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
         }
@@ -158,7 +156,10 @@ public class Client {
             channel.finishConnect();
         }
         channel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
-        cr.printLine("Подключено к серверу. \n");
+
+        for (DisconnectListener listener : disconnectListeners){
+            listener.connect();
+        }
 
         isConnected = true;
         connectionProblem = false;
@@ -280,5 +281,17 @@ public class Client {
 
     public static void setNeedRefresh(boolean needRefresh) {
         Client.needRefresh = needRefresh;
+    }
+
+    public static boolean isConnected() {
+        return isConnected;
+    }
+
+    public static void addDisconnectListener(DisconnectListener listener){
+        disconnectListeners.add(listener);
+    }
+
+    public static void removeDisconnectListener(DisconnectListener listener){
+        disconnectListeners.remove(listener);
     }
 }

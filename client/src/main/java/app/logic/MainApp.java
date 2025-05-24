@@ -1,5 +1,6 @@
 package app.logic;
 
+import connection.Client;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,21 +9,31 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 
 public class MainApp extends Application implements SceneSwitchObserver{
 
     private static Localizer localizer;
     private static Stage index;
+    private static ConnectionErrorWindow connectWindow;
 
 
 
     @Override
     public void start(Stage stage) {
-
-        localizer = new Localizer(ResourceBundle.getBundle("locales/gui", new Locale("ru")));
+        localizer = new Localizer(new Locale("ru"));
         index = stage;
+
+        var connectLoader = new FXMLLoader(getClass().getResource("/markup/connectionError.fxml"));
+        Parent connectionRoot = loadFxml(connectLoader);
+        Scene connectionScene = new Scene(connectionRoot);
+        Stage connectionStage = new Stage();
+        connectionStage.setResizable(false);
+        connectionStage.setScene(connectionScene);
+        connectWindow = connectLoader.getController();
+        connectWindow.setLocalizer(localizer);
+        connectWindow.setStage(connectionStage);
+
         welcomeStage();
     }
 
@@ -44,8 +55,10 @@ public class MainApp extends Application implements SceneSwitchObserver{
         AuthWindow authWindow = authLoader.getController();
         authWindow.setCallback(this::mainStage);
         authWindow.setLocalizer(localizer);
+        authWindow.setConnectionError(connectWindow);
         index.setScene(new Scene(authRoot));
         index.setTitle(localizer.getKeyString("App"));
+        Client.addDisconnectListener(authWindow);
     }
 
     private void regStage(){
@@ -54,36 +67,35 @@ public class MainApp extends Application implements SceneSwitchObserver{
         RegWindow regWindow = regLoader.getController();
         regWindow.setCallback(this::welcomeStage);
         regWindow.setLocalizer(localizer);
+        regWindow.setConnectionError(connectWindow);
         index.setScene(new Scene(regRoot));
         index.setResizable(false);
         index.setTitle(localizer.getKeyString("App"));
+        Client.addDisconnectListener(regWindow);
     }
 
     private void mainStage(){
-
-
-
-
 
         var addLoader = new FXMLLoader(getClass().getResource("/markup/addDragon.fxml"));
         Parent addRoot = loadFxml(addLoader);
         Scene addScene = new Scene(addRoot);
         Stage addStage = new Stage();
         addStage.setResizable(false);
-        //addStage.setMinWidth(755);
-        //addStage.setMinHeight(500);
         addStage.setScene(addScene);
-        addStage.setTitle(localizer.getKeyString("App"));
         AddDragonWindow addDragonWindow = addLoader.getController();
+        addDragonWindow.setLocalizer(localizer);
         addDragonWindow.setStage(addStage);
 
 
         var mainLoader = new FXMLLoader(getClass().getResource("/markup/main.fxml"));
         Parent mainRoot = loadFxml(mainLoader);
         MainWindow mainWindow = mainLoader.getController();
-        mainWindow.setListener(this);
         mainWindow.setLocalizer(localizer);
+        mainWindow.setListener(this);
+        mainWindow.setConnectionError(connectWindow);
         mainWindow.setAddDragonWindow(addDragonWindow);
+        Client.addDisconnectListener(mainWindow);
+
         index.setScene(new Scene(mainRoot));
         index.setTitle(localizer.getKeyString("App"));
         index.setResizable(false);

@@ -12,12 +12,12 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class WelcomeWindow {
+public class WelcomeWindow{
     private SceneSwitchObserver listener;
 
     private Localizer localizer;
     private final HashMap<String, Locale> localeHashMap = new HashMap<>() {{
-        put("Русский", new Locale("ru")); //todo добавить остальные языки
+        put("Русский", new Locale("ru"));
         put("Español", new Locale("es", "DOM"));
     }};
 
@@ -38,14 +38,17 @@ public class WelcomeWindow {
 
     @FXML
     void initialize(){
+
         languageComboBox.setItems(FXCollections.observableArrayList(localeHashMap.keySet()));
         languageComboBox.setValue(Client.getLanguage());
         languageComboBox.setStyle("-fx-font: 12px \"Arial\";");
         languageComboBox.setOnAction(event -> {
             var newLanguage = languageComboBox.getValue();
-            localizer.setResourceBundle(ResourceBundle.getBundle("locales/gui", localeHashMap.get(newLanguage)));
-            Client.setLanguage(newLanguage);
+            Locale locale = localeHashMap.get(newLanguage);
+            localizer.setLocale(locale);
+            MainApp.setLocalizer(this.localizer);
             changeLanguage();
+            Client.setLanguage(newLanguage);
         });
     }
 
@@ -69,6 +72,8 @@ public class WelcomeWindow {
         registrationBtn.setText(localizer.getKeyString("Registration"));
     }
 
+
+
     public void setListener(SceneSwitchObserver listener) {
         this.listener = listener;
     }
@@ -80,4 +85,5 @@ public class WelcomeWindow {
     public void setLocalizer(Localizer localizer) {
         this.localizer = localizer;
     }
+
 }

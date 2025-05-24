@@ -12,6 +12,7 @@ import connection.*;
 import file.ExecuteScript;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -24,9 +25,10 @@ import javafx.stage.Window;
 import javafx.util.Duration;
 import seClasses.Dragon;
 
-public class MainWindow extends Window {
+public class MainWindow extends Window implements DisconnectListener{
     private SceneSwitchObserver listener;
     private AddDragonWindow addDragonWindow;
+    private ConnectionErrorWindow connectionErrorWindow;
     private Timeline refreshTimer;
     private boolean isFiltered = false;
     private Dragon clickedDragon;
@@ -130,136 +132,35 @@ public class MainWindow extends Window {
     private Canvas dragonCanvas;
     @FXML
     private Pane dragonBase;
+    @FXML
+    private Label reconnectionText;
+    @FXML
+    private ProgressIndicator reconnectionBar;
 
 
 
     @FXML
     void initialize() {
+        this.localizer = MainApp.getLocalizer();
+        changeLanguage();
         gc = dragonCanvas.getGraphicsContext2D();
-        localizer = MainApp.getLocalizer();
         setCollection(Client.getDragons());
 
-        idColoumn.setCellValueFactory(dragon -> new SimpleLongProperty(dragon.getValue().getId()).asObject());
-        nameColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(dragon.getValue().getName()));
-        xCoordinateColoumn.setCellValueFactory(dragon -> new SimpleFloatProperty(dragon.getValue().getCoordinates().getX()).asObject());
-        yCoordinateColoumn.setCellValueFactory(dragon -> new SimpleIntegerProperty(dragon.getValue().getCoordinates().getY()).asObject());
-        dateColoumn.setCellValueFactory(dragon -> new SimpleObjectProperty<>(dragon.getValue().getCreationDate()));
-        ageColoumn.setCellValueFactory(dragon ->
-                new SimpleObjectProperty<>(dragon.getValue().getAge())
-        );
-        descriptionColoumn.setCellValueFactory(dragon ->
-                new SimpleStringProperty(dragon.getValue().getDescription() != null ? dragon.getValue().getDescription() : localizer.getKeyString("None")));
-        weightColoumn.setCellValueFactory(dragon ->
-                new SimpleObjectProperty<>(dragon.getValue().getWeight())
-        );
-        typeColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(localizer.getKeyString(dragon.getValue().getType().toString())));
-        personNameColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(
-                dragon.getValue().getKiller() != null ? dragon.getValue().getKiller().getName() : localizer.getKeyString("None")));
-        passportIdColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(
-                dragon.getValue().getKiller() != null ? dragon.getValue().getKiller().getPassportID() : localizer.getKeyString("None")));
-        eyeColorColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(
-                dragon.getValue().getKiller() != null ? localizer.getKeyString(dragon.getValue().getKiller().getEyeColor().toString()) : localizer.getKeyString("None")));
-        hairColorColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(
-                dragon.getValue().getKiller() != null ? localizer.getKeyString(dragon.getValue().getKiller().getHairColor().toString()) : localizer.getKeyString("None")));
-        xLocationColoumn.setCellValueFactory(dragon -> new SimpleObjectProperty<>(
-                (dragon.getValue().getKiller() != null && dragon.getValue().getKiller().getLocation() != null) ? dragon.getValue().getKiller().getLocation().getX() : null));
-
-        yLocationColoumn.setCellValueFactory(dragon -> new SimpleObjectProperty<>(
-                (dragon.getValue().getKiller() != null && dragon.getValue().getKiller().getLocation() != null) ? dragon.getValue().getKiller().getLocation().getY() : null));
-        zLocationColoumn.setCellValueFactory(dragon -> new SimpleObjectProperty<>(
-                (dragon.getValue().getKiller() != null && dragon.getValue().getKiller().getLocation() != null) ? dragon.getValue().getKiller().getLocation().getZ() : null)
-        );
-        locationNameColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(
-                dragon.getValue().getKiller() != null ? dragon.getValue().getKiller().getLocation().getName() : localizer.getKeyString("None")));
-
-        dragonTable.getSortOrder().add(idColoumn);
-        idColoumn.setComparator(Long::compareTo);
-        dragonTable.setRowFactory(tv -> {
-            var row = new TableRow<Dragon>();
-            row.setOnMouseClicked(mouseEvent -> {
-                if (mouseEvent.getClickCount() == 2 && !row.isEmpty()) {
-                    clickedDragon = row.getItem();
-
-                }
-            });
-            return row;
-        });
-
-        ageColoumn.setCellFactory(column -> new TableCell<Dragon, Long>() {
-            @Override
-            protected void updateItem(Long age, boolean empty) {
-                super.updateItem(age, empty);
-                if (empty) {
-                    setText("");
-                } else {
-                    setText(age == null ? localizer.getKeyString("None") : age.toString());
-                }
-            }
-        });
-
-        weightColoumn.setCellFactory(column -> new TableCell<Dragon, Long>() {
-            @Override
-            protected void updateItem(Long weight, boolean empty) {
-                super.updateItem(weight, empty);
-                if (empty) {
-                    setText("");
-                } else {
-                    setText(weight == null ? localizer.getKeyString("None") : weight.toString());
-                }
-            }
-        });
-
-        xLocationColoumn.setCellFactory(column -> new TableCell<Dragon, Integer>() {
-            @Override
-            protected void updateItem(Integer x, boolean empty) {
-                super.updateItem(x, empty);
-                if (empty) {
-                    setText("");
-                } else if (x == null) {
-                    setText(localizer.getKeyString("None"));
-                } else {
-                    setText(x.toString());
-                }
-            }
-        });
-
-        yLocationColoumn.setCellFactory(column -> new TableCell<Dragon, Integer>() {
-            @Override
-            protected void updateItem(Integer y, boolean empty) {
-                super.updateItem(y, empty);
-                if (empty) {
-                    setText("");
-                } else if (y == null) {
-                    setText(localizer.getKeyString("None"));
-                } else {
-                    setText(y.toString());
-                }
-            }
-        });
-
-        zLocationColoumn.setCellFactory(column -> new TableCell<Dragon, Double>() {
-            @Override
-            protected void updateItem(Double z, boolean empty) {
-                super.updateItem(z, empty);
-                if (empty) {
-                    setText("");
-                } else if (z == null) {
-                    setText(localizer.getKeyString("None"));
-                } else {
-                    setText(String.format("%.2f", z));
-                }
-            }
-        });
+        fillTable();
 
         userTxt.setText(Client.getUser().getLogin());
+
+
         languageComboBox.setItems(FXCollections.observableArrayList(localeHashMap.keySet()));
         languageComboBox.setValue(Client.getLanguage());
         languageComboBox.setStyle("-fx-font: 12px \"Arial\";");
         languageComboBox.setOnAction(event -> {
             var newLanguage = languageComboBox.getValue();
-            localizer.setResourceBundle(ResourceBundle.getBundle("locales/gui", localeHashMap.get(newLanguage)));
+            Locale locale = localeHashMap.get(newLanguage);
+            localizer.setLocale(locale);
+            MainApp.setLocalizer(this.localizer);
+            changeLanguage();
             Client.setLanguage(newLanguage);
-            changeLanguage(); //todo Добавить смену языка
         });
 
         refreshTimer = new Timeline(
@@ -273,8 +174,14 @@ public class MainWindow extends Window {
                         }
                 )
         );
+
+
+
+
+
         refreshTimer.setCycleCount(Timeline.INDEFINITE);
         refreshTimer.play();
+
 
         dragonCanvas.widthProperty().bind(dragonBase.widthProperty());
         dragonCanvas.heightProperty().bind(dragonBase.heightProperty());
@@ -886,6 +793,7 @@ public class MainWindow extends Window {
     }
 
     private void changeLanguage(){
+        fillTable();
         helpBtn.setText(localizer.getKeyString("HelpBtn"));
         exitBtn.setText(localizer.getKeyString("ExitBtn"));
         headBtn.setText(localizer.getKeyString("HeadBtn"));
@@ -920,11 +828,130 @@ public class MainWindow extends Window {
         locationNameColoumn.setText(localizer.getKeyString("Place"));
     }
 
+    private void fillTable(){
+        idColoumn.setCellValueFactory(dragon -> new SimpleLongProperty(dragon.getValue().getId()).asObject());
+        nameColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(dragon.getValue().getName()));
+        xCoordinateColoumn.setCellValueFactory(dragon -> new SimpleFloatProperty(dragon.getValue().getCoordinates().getX()).asObject());
+        yCoordinateColoumn.setCellValueFactory(dragon -> new SimpleIntegerProperty(dragon.getValue().getCoordinates().getY()).asObject());
+        dateColoumn.setCellValueFactory(dragon -> new SimpleObjectProperty<>(dragon.getValue().getCreationDate()));
+        ageColoumn.setCellValueFactory(dragon ->
+                new SimpleObjectProperty<>(dragon.getValue().getAge())
+        );
+        descriptionColoumn.setCellValueFactory(dragon ->
+                new SimpleStringProperty(dragon.getValue().getDescription() != null ? dragon.getValue().getDescription() : localizer.getKeyString("None")));
+        weightColoumn.setCellValueFactory(dragon ->
+                new SimpleObjectProperty<>(dragon.getValue().getWeight())
+        );
+        typeColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(localizer.getKeyString(dragon.getValue().getType().toString())));
+        personNameColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(
+                dragon.getValue().getKiller() != null ? dragon.getValue().getKiller().getName() : localizer.getKeyString("None")));
+        passportIdColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(
+                dragon.getValue().getKiller() != null ? dragon.getValue().getKiller().getPassportID() : localizer.getKeyString("None")));
+        eyeColorColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(
+                dragon.getValue().getKiller() != null ? localizer.getKeyString(dragon.getValue().getKiller().getEyeColor().toString()) : localizer.getKeyString("None")));
+        hairColorColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(
+                dragon.getValue().getKiller() != null ? localizer.getKeyString(dragon.getValue().getKiller().getHairColor().toString()) : localizer.getKeyString("None")));
+        xLocationColoumn.setCellValueFactory(dragon -> new SimpleObjectProperty<>(
+                (dragon.getValue().getKiller() != null && dragon.getValue().getKiller().getLocation() != null) ? dragon.getValue().getKiller().getLocation().getX() : null));
+
+        yLocationColoumn.setCellValueFactory(dragon -> new SimpleObjectProperty<>(
+                (dragon.getValue().getKiller() != null && dragon.getValue().getKiller().getLocation() != null) ? dragon.getValue().getKiller().getLocation().getY() : null));
+        zLocationColoumn.setCellValueFactory(dragon -> new SimpleObjectProperty<>(
+                (dragon.getValue().getKiller() != null && dragon.getValue().getKiller().getLocation() != null) ? dragon.getValue().getKiller().getLocation().getZ() : null)
+        );
+        locationNameColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(
+                dragon.getValue().getKiller() != null ? dragon.getValue().getKiller().getLocation().getName() : localizer.getKeyString("None")));
+
+        dragonTable.getSortOrder().add(idColoumn);
+        idColoumn.setComparator(Long::compareTo);
+        dragonTable.setRowFactory(tv -> {
+            var row = new TableRow<Dragon>();
+            row.setOnMouseClicked(mouseEvent -> {
+                if (mouseEvent.getClickCount() == 2 && !row.isEmpty()) {
+                    clickedDragon = row.getItem();
+
+                }
+            });
+            return row;
+        });
+
+        ageColoumn.setCellFactory(column -> new TableCell<Dragon, Long>() {
+            @Override
+            protected void updateItem(Long age, boolean empty) {
+                super.updateItem(age, empty);
+                if (empty) {
+                    setText("");
+                } else {
+                    setText(age == null ? localizer.getKeyString("None") : age.toString());
+                }
+            }
+        });
+
+        weightColoumn.setCellFactory(column -> new TableCell<Dragon, Long>() {
+            @Override
+            protected void updateItem(Long weight, boolean empty) {
+                super.updateItem(weight, empty);
+                if (empty) {
+                    setText("");
+                } else {
+                    setText(weight == null ? localizer.getKeyString("None") : weight.toString());
+                }
+            }
+        });
+
+        xLocationColoumn.setCellFactory(column -> new TableCell<Dragon, Integer>() {
+            @Override
+            protected void updateItem(Integer x, boolean empty) {
+                super.updateItem(x, empty);
+                if (empty) {
+                    setText("");
+                } else if (x == null) {
+                    setText(localizer.getKeyString("None"));
+                } else {
+                    setText(x.toString());
+                }
+            }
+        });
+
+        yLocationColoumn.setCellFactory(column -> new TableCell<Dragon, Integer>() {
+            @Override
+            protected void updateItem(Integer y, boolean empty) {
+                super.updateItem(y, empty);
+                if (empty) {
+                    setText("");
+                } else if (y == null) {
+                    setText(localizer.getKeyString("None"));
+                } else {
+                    setText(y.toString());
+                }
+            }
+        });
+
+        zLocationColoumn.setCellFactory(column -> new TableCell<Dragon, Double>() {
+            @Override
+            protected void updateItem(Double z, boolean empty) {
+                super.updateItem(z, empty);
+                if (empty) {
+                    setText("");
+                } else if (z == null) {
+                    setText(localizer.getKeyString("None"));
+                } else {
+                    setText(String.format("%.2f", z));
+                }
+            }
+        });
+
+    }
+
     private void dragonClick(Dragon dragon) {
         clickedDragon = dragon;
         PriorityQueue<Dragon> dragons = new PriorityQueue<>();
         dragons.add(dragon);
         setCollection(dragons);
+    }
+
+    public void setConnectionError(ConnectionErrorWindow connectionError){
+        this.connectionErrorWindow = connectionError;
     }
 
     public boolean isFiltered() {
@@ -933,5 +960,21 @@ public class MainWindow extends Window {
 
     public void setFiltered(boolean filtered) {
         isFiltered = filtered;
+    }
+
+    @Override
+    public void disconnect() {
+        reconnectionBar.setVisible(true);
+        reconnectionText.setVisible(true);
+        connectionErrorWindow.show();
+    }
+
+    @Override
+    public void connect(){
+        Platform.runLater(() -> {
+            connectionErrorWindow.close();
+            reconnectionBar.setVisible(false);
+            reconnectionText.setVisible(false);
+        });
     }
 }
