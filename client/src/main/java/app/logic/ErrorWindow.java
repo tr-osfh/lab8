@@ -28,6 +28,12 @@ public class ErrorWindow {
         stage.showAndWait();
     }
 
+    public void alertScr(String title, String content) {
+        error.setText(title);
+        txt.setText(content);
+        stage.show();
+    }
+
     public void setStage(Stage stage){
         this.stage = stage;
     }

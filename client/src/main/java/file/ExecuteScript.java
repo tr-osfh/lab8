@@ -34,7 +34,6 @@ public class ExecuteScript {
         try {
             lines = Files.readAllLines(scriptFile.toPath(), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            System.out.println("Невозможно выполнить файл.");
             return this;
         }
 
@@ -45,7 +44,6 @@ public class ExecuteScript {
             CommandsList cmd = CommandDecoder.getCommandType(line[0]);
             if (cmd.equals(CommandsList.EXECUTE_SCRIPT)){
                 if (fileMemory.contains(new File(line[1]))){
-                    System.out.println("Рекурсия недоступна, строка пропущена.");
                     continue;
                 }
                 this.readScript(new File(line[1]));
@@ -92,9 +90,10 @@ public class ExecuteScript {
             if (command != null){
                 commandQueue.add(command);
             } else {
-                System.out.println("Команда с ошибкой "+ line[0] +" пропущена.");
-                for (int i = lineIndex + 1; i <= lines.size(); i++){
-                    if (CommandDecoder.getCommandType(lines.get(i)) != CommandsList.DEFAULT){
+                for (int i = lineIndex + 1; i < lines.size(); i++) {
+                    String currentLine = lines.get(i);
+                    CommandsList currentCommand = CommandDecoder.getCommandType(currentLine);
+                    if (currentCommand != null && currentCommand != CommandsList.DEFAULT) {
                         lineIndex = i - 1;
                         break;
                     }

@@ -773,7 +773,7 @@ public class MainWindow extends Window {
                 return;
             }
             if (response.getResponseStatus().equals(ResponseStatus.OK) && response.getType().equals(CommandResponse.SUM_OF_AGE)) {
-                DialogManager.inform("Info", localizer.getKeyString("SumOfAgeBtn") + response.getResponse(), localizer);
+                DialogManager.inform("Info", localizer.getKeyString("SumOfAgeRet") + response.getResponse(), localizer);
             } else if (response.getResponseStatus().equals(ResponseStatus.ERROR) && response.getType().equals(CommandResponse.SUM_OF_AGE)) {
                 DialogManager.inform("Info", localizer.getKeyString("NoAgeData"), localizer);
             } else {

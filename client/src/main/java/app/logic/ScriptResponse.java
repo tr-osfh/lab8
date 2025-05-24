@@ -13,14 +13,16 @@ import java.util.stream.Collectors;
 public class ScriptResponse {
     public static void process(ArrayList<Response> listOfResponses, Localizer localizer, MainWindow mw){
 
+
         for (Response response : listOfResponses){
+            System.out.println(response);
             CommandResponse type = response.getType();
 
             switch (type){
                 case HELP:
-                    DialogManager.help("HelpBtn", response.getCommandCollection().stream()
+                    DialogManager.helpScr("HelpBtn", response.getCommandCollection().stream()
                             .map(localizer::getKeyString).collect(Collectors.joining("\n")), localizer);
-                    return;
+                    continue;
                 case HEAD, FILTER_CONTAINS_NAME, FILTER_STARTS_WITH_NAME:
                     if (response.getDragons() != null){
                         mw.setFiltered(true);
@@ -28,9 +30,9 @@ public class ScriptResponse {
                         dragons.addAll(response.getDragons());
                         mw.setCollection(dragons);
                     } else {
-                        DialogManager.inform("Info", localizer.getKeyString(response.getResponse()), localizer);
+                        DialogManager.informScr("Info", localizer.getKeyString(response.getResponse()), localizer);
                     }
-                    return;
+                    continue;
                 case INFO:
                     var message = MessageFormat.format(
                             localizer.getKeyString("InfoReturn"),
@@ -38,18 +40,18 @@ public class ScriptResponse {
                             response.getInfo().getNumberOfDragons(),
                             response.getInfo().getYourDragons(),
                             localizer.getDate(response.getInfo().getDateOfInit()));
-                    DialogManager.inform("Info", message, localizer);
-                    return;
+                    DialogManager.informScr("Info", message, localizer);
+                    continue;
                 case ADD, ADD_IF_MIN, UPDATE, REMOVE_LOWER, REMOVE_BY_ID, CLEAR:
-                    DialogManager.inform("Info", localizer.getKeyString(response.getResponse()), localizer);
-                    return;
+                    DialogManager.informScr("Info", localizer.getKeyString(response.getResponse()), localizer);
+                    continue;
                 case SUM_OF_AGE:
                     if (response.getResponseStatus().equals(ResponseStatus.OK)) {
-                        DialogManager.inform("Info", localizer.getKeyString("SumOfAgeBtn") + response.getResponse(), localizer);
+                        DialogManager.informScr("Info", localizer.getKeyString("SumOfAgeRet") + response.getResponse(), localizer);
                     } else if (response.getResponseStatus().equals(ResponseStatus.ERROR)) {
-                        DialogManager.inform("Info", localizer.getKeyString("NoAgeData"), localizer);
+                        DialogManager.informScr("Info", localizer.getKeyString("NoAgeData"), localizer);
                     }
-                    return;
+                    continue;
             }
         }
     }

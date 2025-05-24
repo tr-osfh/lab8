@@ -28,6 +28,13 @@ public class HelpWindow {
         stage.showAndWait();
     }
 
+    public void helpScr(String title, String content) {
+        mainTxt.setText(title);
+        txt.setText(content);
+        stage.show();
+    }
+
+
     public void setStage(Stage stage){
         this.stage = stage;
     }

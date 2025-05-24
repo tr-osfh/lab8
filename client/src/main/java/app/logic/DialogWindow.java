@@ -76,11 +76,9 @@ public class DialogWindow {
         this.localizer = localizer;
     }
     public void show() {
-        if (!stage.isShowing()) {
-            mainTxt.setText(localizer.getKeyString(txt));
-            whatToDo.setText(localizer.getKeyString(todo));
-            stage.showAndWait();
-        }
+        mainTxt.setText(localizer.getKeyString(txt));
+        whatToDo.setText(localizer.getKeyString(todo));
+        stage.showAndWait();
     }
 
     public void clear() {

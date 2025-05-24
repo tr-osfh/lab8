@@ -30,6 +30,12 @@ public class InfoWindow {
         stage.showAndWait();
     }
 
+    public void informScr(String title, String content) {
+        mainTxt.setText(title);
+        txt.setText(content);
+        stage.show();
+    }
+
     public void setStage(Stage stage){
         this.stage = stage;
     }
