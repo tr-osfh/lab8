@@ -1,25 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-
-<AnchorPane fx:id="pane"
-            maxHeight="-Infinity"
-            maxWidth="-Infinity"
-            minHeight="-Infinity"
-            minWidth="-Infinity"
-            prefHeight="330.0"
-            prefWidth="440.0"
-            xmlns="http://javafx.com/javafx/17.0.2-ea"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="app.logic.WelcomeWindow">
+<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="440.0" style="-fx-background-color: f1f0ec;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.logic.WelcomeWindow">
 
     <children>
         <GridPane alignment="TOP_CENTER" layoutX="69.0" layoutY="99.0" prefHeight="145.0" prefWidth="306.0">
@@ -33,9 +18,7 @@
             </rowConstraints>
 
             <children>
-                <Label fx:id="welcomeText" alignment="CENTER" contentDisplay="CENTER"
-                       prefHeight="17.0" prefWidth="313.0"
-                       text="Добро пожаловать!" textAlignment="CENTER">
+                <Label fx:id="welcomeText" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="313.0" text="Добро пожаловать!" textAlignment="CENTER">
                     <font>
                         <Font size="24.0" />
                     </font>
@@ -52,23 +35,14 @@
                     </rowConstraints>
 
                     <children>
-                        <Button fx:id="registrationBtn" alignment="CENTER" contentDisplay="CENTER"
-                                mnemonicParsing="false" onAction="#registration"
-                                prefHeight="36.0" prefWidth="227.0"
-                                text="регистрация" textAlignment="CENTER" />
+                        <Button fx:id="registrationBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#registration" prefHeight="36.0" prefWidth="227.0" style="-fx-background-color: efe2ba; -fx-background-radius: 20 0 0 20;" text="регистрация" textAlignment="CENTER" />
 
-                        <Button fx:id="authorizationBtn" alignment="CENTER" contentDisplay="CENTER"
-                                mnemonicParsing="false" onAction="#authorization"
-                                prefHeight="36.0" prefWidth="227.0"
-                                text="авторизация" textAlignment="CENTER"
-                                GridPane.columnIndex="1" />
+                        <Button fx:id="authorizationBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#authorization" prefHeight="36.0" prefWidth="227.0" style="-fx-background-color: efe2ba; -fx-background-radius: 0 20 20 0;" text="авторизация" textAlignment="CENTER" GridPane.columnIndex="1" />
                     </children>
                 </GridPane>
             </children>
         </GridPane>
 
-        <ComboBox fx:id="languageComboBox" layoutX="327.0" layoutY="14.0"
-                  prefHeight="25.0" prefWidth="96.0"
-                  promptText="Язык" />
+        <ComboBox fx:id="languageComboBox" layoutX="327.0" layoutY="14.0" prefHeight="25.0" prefWidth="96.0" promptText="Язык" style="-fx-background-color: efe2ba;" />
     </children>
 </AnchorPane>

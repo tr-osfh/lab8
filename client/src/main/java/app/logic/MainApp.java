@@ -94,6 +94,7 @@ public class MainApp extends Application implements SceneSwitchObserver{
         mainWindow.setListener(this);
         mainWindow.setConnectionError(connectWindow);
         mainWindow.setAddDragonWindow(addDragonWindow);
+        Client.addRefreshListener(mainWindow);
         Client.addDisconnectListener(mainWindow);
 
         index.setScene(new Scene(mainRoot));

@@ -1,6 +1,7 @@
 package connection;
 
 import app.logic.DisconnectListener;
+import app.logic.RefreshCollectionListener;
 import commands.Command;
 import commands.CommandsList;
 import commands.ExecuteScriptCommand;
@@ -37,8 +38,8 @@ public class Client {
     private static String language = "Русский";
     private static volatile Response mainResponse;
     private static PriorityQueue<Dragon> dragons = new PriorityQueue<>();
-    private static volatile boolean needRefresh = false;
     private static ArrayList<DisconnectListener> disconnectListeners = new ArrayList<>();
+    private static ArrayList<RefreshCollectionListener> refreshCollectionListeners = new ArrayList<>();
     public Client(String serverAddress, int port) {
         this.serverAddress = serverAddress;
         this.port = port;
@@ -180,11 +181,11 @@ public class Client {
             if (response.getResponseStatus().equals(ResponseStatus.REFRESH)){
                 dragons.clear();
                 dragons.addAll(response.getDragons());
-                System.out.println("gbdjjasdfjl;ksadghjkol;asdgfhjkonl;adfgbnjkl;");
-                for (Dragon dragon : response.getDragons()) {
-                    System.out.println(dragon);
+
+                for (RefreshCollectionListener listener : refreshCollectionListeners){
+                    listener.refresh();
                 }
-                needRefresh = true;
+
             }
             else {
                 Client.mainResponse = response;
@@ -275,14 +276,6 @@ public class Client {
         Client.user = user;
     }
 
-    public static boolean isNeedRefresh() {
-        return needRefresh;
-    }
-
-    public static void setNeedRefresh(boolean needRefresh) {
-        Client.needRefresh = needRefresh;
-    }
-
     public static boolean isConnected() {
         return isConnected;
     }
@@ -293,5 +286,9 @@ public class Client {
 
     public static void removeDisconnectListener(DisconnectListener listener){
         disconnectListeners.remove(listener);
+    }
+
+    public static void addRefreshListener(RefreshCollectionListener listener){
+        refreshCollectionListeners.add(listener);
     }
 }

@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="440.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.logic.RegWindow">
+<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="266.0" prefWidth="440.0" style="-fx-background-color: f1f0ec;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.logic.RegWindow">
 
     <children>
         <GridPane alignment="TOP_CENTER" layoutX="80.0" layoutY="72.0" prefHeight="118.0" prefWidth="280.0">
@@ -19,15 +19,15 @@
             <children>
                 <Label fx:id="loginTxt" prefHeight="17.0" prefWidth="156.0" text="Логин" />
                 <Label fx:id="passwordTxt" prefHeight="17.0" prefWidth="153.0" text="Пароль" GridPane.rowIndex="1" />
-                <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <PasswordField fx:id="repeatPasswordField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <PasswordField fx:id="passwordField" style="-fx-background-color: fff;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <PasswordField fx:id="repeatPasswordField" style="-fx-background-color: fff;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 <Label fx:id="repeatPswdTxt" prefHeight="89.0" prefWidth="116.0" text="Повторите пароль" GridPane.rowIndex="2" />
-            <TextField fx:id="loginField" GridPane.columnIndex="1" />
+            <TextField fx:id="loginField" style="-fx-background-color: fff;" GridPane.columnIndex="1" />
             </children>
         </GridPane>
 
-        <ComboBox fx:id="languageComboBox" layoutX="327.0" layoutY="14.0" prefHeight="25.0" prefWidth="96.0" promptText="Язык" />
+        <ComboBox fx:id="languageComboBox" layoutX="327.0" layoutY="14.0" prefHeight="25.0" prefWidth="96.0" promptText="Язык" style="-fx-background-color: efe2ba;" />
         <TitledPane animated="false" layoutX="69.0" layoutY="-41.0" text="untitled" />
-        <Button fx:id="createBtn" layoutX="144.0" layoutY="200.0" mnemonicParsing="false" onAction="#create" prefHeight="38.0" prefWidth="153.0" text="Создать" />
+        <Button fx:id="createBtn" layoutX="144.0" layoutY="200.0" mnemonicParsing="false" onAction="#create" prefHeight="38.0" prefWidth="153.0" style="-fx-background-color: efe2ba; -fx-background-radius: 20 20 20 20;" text="Создать" />
     </children>
 </AnchorPane>

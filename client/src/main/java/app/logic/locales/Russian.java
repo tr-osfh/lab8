@@ -134,6 +134,9 @@ public class Russian {
         language.put("Reconnect", "Переподключиться");
         language.put("ConnectionErrorWait", "Переподключение...");
         language.put("Reconnected", "Подключение восстановлено");
+        language.put("Confirm", "Подтвердить");
+        language.put("Reconnection", "Подключение");
+        language.put("Unfilter", "Сбросить фильтр");
         return language;
 
     }

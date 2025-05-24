@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import commands.*;
 import connection.*;
 import file.ExecuteScript;
-import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.*;
@@ -22,10 +21,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Window;
-import javafx.util.Duration;
 import seClasses.Dragon;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
-public class MainWindow extends Window implements DisconnectListener{
+public class MainWindow extends Window implements DisconnectListener, RefreshCollectionListener{
     private SceneSwitchObserver listener;
     private AddDragonWindow addDragonWindow;
     private ConnectionErrorWindow connectionErrorWindow;
@@ -136,6 +136,10 @@ public class MainWindow extends Window implements DisconnectListener{
     private Label reconnectionText;
     @FXML
     private ProgressIndicator reconnectionBar;
+    @FXML
+    private Button removeFilterBtn;
+    @FXML
+    private ImageView image;
 
 
 
@@ -144,7 +148,7 @@ public class MainWindow extends Window implements DisconnectListener{
         this.localizer = MainApp.getLocalizer();
         changeLanguage();
         gc = dragonCanvas.getGraphicsContext2D();
-        setCollection(Client.getDragons());
+        Platform.runLater(() -> setCollection(Client.getDragons()));
 
         fillTable();
 
@@ -163,24 +167,7 @@ public class MainWindow extends Window implements DisconnectListener{
             Client.setLanguage(newLanguage);
         });
 
-        refreshTimer = new Timeline(
-                new KeyFrame(
-                        Duration.seconds(3),
-                        event -> {
-                            if (Client.isNeedRefresh() && !isFiltered) {
-                                setCollection(Client.getDragons());
-                                Client.setNeedRefresh(false);
-                            }
-                        }
-                )
-        );
-
-
-
-
-
-        refreshTimer.setCycleCount(Timeline.INDEFINITE);
-        refreshTimer.play();
+        image = new ImageView(new Image(getClass().getResourceAsStream("/Sample_User_Icon.png")));
 
 
         dragonCanvas.widthProperty().bind(dragonBase.widthProperty());
@@ -199,8 +186,6 @@ public class MainWindow extends Window implements DisconnectListener{
                 }
             }
         });
-
-
     }
 
 
@@ -761,21 +746,7 @@ public class MainWindow extends Window implements DisconnectListener{
         }
     }
 
-    public void setListener(SceneSwitchObserver listener) {
-        this.listener = listener;
-    }
 
-    public Localizer getLocalizer() {
-        return localizer;
-    }
-
-    public void setLocalizer(Localizer localizer) {
-        this.localizer = localizer;
-    }
-
-    public void setAddDragonWindow(AddDragonWindow addDragonWindow) {
-        this.addDragonWindow = addDragonWindow;
-    }
 
     public void setCollection(PriorityQueue<Dragon> ds){
         PriorityQueue<Dragon> dragons = ds;
@@ -826,6 +797,9 @@ public class MainWindow extends Window implements DisconnectListener{
         yLocationColoumn.setText(localizer.getKeyString("LocationY"));
         zLocationColoumn.setText(localizer.getKeyString("LocationZ"));
         locationNameColoumn.setText(localizer.getKeyString("Place"));
+
+        reconnectionText.setText(localizer.getKeyString("Reconnection"));
+        removeFilterBtn.setText(localizer.getKeyString("Unfilter"));
     }
 
     private void fillTable(){
@@ -962,6 +936,22 @@ public class MainWindow extends Window implements DisconnectListener{
         isFiltered = filtered;
     }
 
+    public void setListener(SceneSwitchObserver listener) {
+        this.listener = listener;
+    }
+
+    public Localizer getLocalizer() {
+        return localizer;
+    }
+
+    public void setLocalizer(Localizer localizer) {
+        this.localizer = localizer;
+    }
+
+    public void setAddDragonWindow(AddDragonWindow addDragonWindow) {
+        this.addDragonWindow = addDragonWindow;
+    }
+
     @Override
     public void disconnect() {
         reconnectionBar.setVisible(true);
@@ -975,6 +965,15 @@ public class MainWindow extends Window implements DisconnectListener{
             connectionErrorWindow.close();
             reconnectionBar.setVisible(false);
             reconnectionText.setVisible(false);
+        });
+    }
+
+    @Override
+    public void refresh(){
+        Platform.runLater(() -> {
+            if (!isFiltered){
+                setCollection(Client.getDragons());
+            }
         });
     }
 }

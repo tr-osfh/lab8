@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.logic.AddDragonWindow">
+<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: f1f0ec;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.logic.AddDragonWindow">
    <children>
-      <GridPane layoutX="86.0" layoutY="84.0" prefHeight="285.0" prefWidth="269.0">
+      <GridPane layoutX="86.0" layoutY="84.0" prefHeight="285.0" prefWidth="269.0" AnchorPane.leftAnchor="80.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -37,29 +38,22 @@
             <Label fx:id="weightTxt" prefHeight="17.0" prefWidth="118.0" text="Вес" GridPane.rowIndex="10" />
             <Label fx:id="typeTxt" prefHeight="17.0" prefWidth="213.0" text="Тип" GridPane.rowIndex="12" />
             <Label fx:id="addKillerTxt" prefHeight="17.0" prefWidth="143.0" text="Добавить убийцу?" GridPane.rowIndex="14" />
-            <CheckBox fx:id="addKillerCheckBox" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="14" />
-            <TextField fx:id="nameField" GridPane.columnIndex="1" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" fx:id="xField" />
-            <TextField fx:id="yField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <TextField fx:id="ageField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <TextField fx:id="descriptionField" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-            <TextField fx:id="weightField" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-            <ComboBox fx:id="typeComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+            <CheckBox fx:id="addKillerCheckBox" mnemonicParsing="false" style="-fx-background-color: fff;" GridPane.columnIndex="1" GridPane.rowIndex="14" />
+            <TextField fx:id="nameField" style="-fx-background-color: fff;" GridPane.columnIndex="1" />
+            <TextField style="-fx-background-color: fff;" GridPane.columnIndex="1" GridPane.rowIndex="2" fx:id="xField" />
+            <TextField fx:id="yField" style="-fx-background-color: fff;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="ageField" style="-fx-background-color: ffff;" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <TextField fx:id="descriptionField" style="-fx-background-color: ffff;" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <TextField fx:id="weightField" style="-fx-background-color: fff;" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+            <ComboBox fx:id="typeComboBox" prefWidth="150.0" style="-fx-background-color: ffff;" GridPane.columnIndex="1" GridPane.rowIndex="12" />
          </children>
       </GridPane>
-       <Button fx:id="confirmBtn" layoutX="144.0" layoutY="411.0" mnemonicParsing="false" onAction="#confirm" prefHeight="38.0" prefWidth="153.0" text="Подтвердить" />
       <Label fx:id="titleTxt" alignment="CENTER" contentDisplay="CENTER" layoutY="19.0" prefHeight="46.0" prefWidth="440.0" text="Добавить дракона">
          <font>
-            <Font size="18.0" />
+            <Font size="24.0" />
          </font>
       </Label>
-       <GridPane fx:id="killerCont"
-                 AnchorPane.topAnchor="84.0"
-                 AnchorPane.rightAnchor="20.0"
-                 prefHeight="285.0"
-                 prefWidth="269.0"
-                 visible="false"
-                 managed="false">
+       <GridPane fx:id="killerCont" managed="false" prefHeight="285.0" prefWidth="269.0" visible="false" AnchorPane.bottomAnchor="84.0" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="380.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="134.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="134.0" />
@@ -90,20 +84,28 @@
             <Label fx:id="locationYTxt" prefHeight="17.0" prefWidth="118.0" text="Y" GridPane.rowIndex="10" />
             <Label fx:id="locationZTxt" prefHeight="17.0" prefWidth="213.0" text="Z" GridPane.rowIndex="12" />
             <Label fx:id="placeTxt" prefHeight="17.0" prefWidth="143.0" text="Место" GridPane.rowIndex="14" />
-            <TextField fx:id="killerNameField" GridPane.columnIndex="1" />
-            <TextField fx:id="passportField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="locationXField" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-            <TextField fx:id="locationYField" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-            <TextField fx:id="placeField" GridPane.columnIndex="1" GridPane.rowIndex="14" />
-            <TextField fx:id="locationZField" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-            <ComboBox fx:id="eyeColorComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <ComboBox fx:id="hairColorComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <TextField fx:id="killerNameField" style="-fx-background-color: ffff;" GridPane.columnIndex="1" />
+            <TextField fx:id="passportField" style="-fx-background-color: fff;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="locationXField" style="-fx-background-color: fff;" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <TextField fx:id="locationYField" style="-fx-background-color: fff;" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+            <TextField fx:id="placeField" style="-fx-background-color: fff;" GridPane.columnIndex="1" GridPane.rowIndex="14" />
+            <TextField fx:id="locationZField" style="-fx-background-color: fff;" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+            <ComboBox fx:id="eyeColorComboBox" prefWidth="150.0" style="-fx-background-color: fff;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <ComboBox fx:id="hairColorComboBox" prefWidth="150.0" style="-fx-background-color: fff;" GridPane.columnIndex="1" GridPane.rowIndex="6" />
          </children>
       </GridPane>
-      <Label fx:id="killerData" alignment="CENTER" contentDisplay="CENTER" layoutX="546.0" layoutY="29.0" prefHeight="17.0" prefWidth="135.0" text="данные убийцы" visible="false">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
+       <Button fx:id="confirmBtn" layoutX="138.0" layoutY="398.0" mnemonicParsing="false" onAction="#confirm" prefHeight="38.0" prefWidth="153.0" style="-fx-background-color: efe2ba; -fx-background-radius: 20 20 20 20;" text="Подтвердить" AnchorPane.bottomAnchor="30.0">
+         <opaqueInsets>
+            <Insets top="380.0" />
+         </opaqueInsets>
+      </Button>
+      <GridPane layoutX="165.0" layoutY="442.0" prefHeight="8.0" prefWidth="100.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+      </GridPane>
    </children>
 </AnchorPane>

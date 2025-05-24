@@ -3,10 +3,7 @@ package app.logic;
 import connection.Client;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import seClasses.*;
@@ -86,8 +83,6 @@ public class AddDragonWindow {
     @FXML
     private GridPane killerCont;
 
-    @FXML
-    private Label killerData;
 
 
 
@@ -138,6 +133,9 @@ public class AddDragonWindow {
 
     @FXML
     private ComboBox hairColorComboBox;
+
+    @FXML
+    private Button confirmBtn;
 
 
     @FXML
@@ -327,7 +325,6 @@ public class AddDragonWindow {
     @FXML
     void initialize(){
         killerCont.setManaged(false);
-        killerData.setManaged(false);
 
         typeHashMap.put(localizer.getKeyString("WaterType"), DragonType.WATER);
         typeHashMap.put(localizer.getKeyString("AirType"), DragonType.AIR);
@@ -371,14 +368,11 @@ public class AddDragonWindow {
         });
 
         addKillerCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            killerData.setVisible(newValue);
             killerCont.setVisible(newValue);
-            killerData.setManaged(newValue);
             killerCont.setManaged(newValue);
 
 
             if (stage != null) {
-                System.out.println("Бублик с дыркой");
                 stage.sizeToScene();
             }
         });
@@ -392,6 +386,42 @@ public class AddDragonWindow {
 
 
     public void changeLanguage(){
+        confirmBtn.setText(localizer.getKeyString("Confirm"));
+
+        typeHashMap.clear();
+        eyeColorHashMap.clear();
+        hairColorHashMap.clear();
+
+        typeHashMap.put(localizer.getKeyString("WaterType"), DragonType.WATER);
+        typeHashMap.put(localizer.getKeyString("AirType"), DragonType.AIR);
+        typeHashMap.put(localizer.getKeyString("UndergroundType"), DragonType.UNDERGROUND);
+
+
+        eyeColorHashMap.put(localizer.getKeyString("Green"), BrightColor.GREEN);
+        eyeColorHashMap.put(localizer.getKeyString("Black"), BrightColor.BLACK);
+        eyeColorHashMap.put(localizer.getKeyString("Blue"), BrightColor.BLUE);
+        eyeColorHashMap.put(localizer.getKeyString("Yellow"), BrightColor.YELLOW);
+        eyeColorHashMap.put(localizer.getKeyString("Orange"), BrightColor.ORANGE);
+
+        hairColorHashMap.put(localizer.getKeyString("Red"), NaturalColor.RED);
+        hairColorHashMap.put(localizer.getKeyString("Black"), NaturalColor.BLACK);
+        hairColorHashMap.put(localizer.getKeyString("Yellow"), NaturalColor.YELLOW);
+        hairColorHashMap.put(localizer.getKeyString("White"), NaturalColor.WHITE);
+        hairColorHashMap.put(localizer.getKeyString("Brown"), NaturalColor.BROWN);
+
+        typeComboBox.setItems(FXCollections.observableArrayList(
+                typeHashMap.keySet()
+        ));
+
+        eyeColorComboBox.setItems(FXCollections.observableArrayList(
+                eyeColorHashMap.keySet()
+        ));
+
+        hairColorComboBox.setItems(FXCollections.observableArrayList(
+                hairColorHashMap.keySet()
+        ));
+
+
         nameTxt.setText(localizer.getKeyString("Name"));
         yTxt.setText(localizer.getKeyString("yCoordinate"));
         xTxt.setText(localizer.getKeyString("xCoordinate"));
@@ -410,7 +440,6 @@ public class AddDragonWindow {
         locationZTxt.setText(localizer.getKeyString("LocationZ"));
         placeTxt.setText(localizer.getKeyString("Place"));
 
-        killerData.setText(localizer.getKeyString("KillerData"));
         titleTxt.setText(localizer.getKeyString("AddDragon"));
     }
 
@@ -431,8 +460,6 @@ public class AddDragonWindow {
         placeField.clear();
         eyeColorComboBox.setValue(localizer.getKeyString("None"));
         hairColorComboBox.setValue(localizer.getKeyString("None"));
-        killerData.setVisible(false);
-        killerData.setManaged(false);
         killerCont.setVisible(false);
         killerCont.setManaged(false);
     }

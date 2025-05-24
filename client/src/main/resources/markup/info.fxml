@@ -4,9 +4,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="267.0" prefWidth="361.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.logic.InfoWindow">
+<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="267.0" prefWidth="361.0" style="-fx-background-color: f1f0ec;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.logic.InfoWindow">
     <children>
-        <Button fx:id="okBtn" layoutX="133.0" layoutY="203.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" text="ОК" />
+        <Button fx:id="okBtn" layoutX="133.0" layoutY="203.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="96.0" style="-fx-background-color: efe2ba; -fx-background-radius: 20 20 20 20;" text="ОК" />
         <Label fx:id="txt" alignment="CENTER" layoutX="21.0" layoutY="73.0" prefHeight="122.0" prefWidth="321.0" text="Н-да.. Лажа." wrapText="true">
             <font>
                 <Font size="14.0" />

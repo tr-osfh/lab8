@@ -2,9 +2,9 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2025-05-24T21:00:19.513401700Z</date>
-  <millis>1748120419513</millis>
-  <nanos>401700</nanos>
+  <date>2025-05-24T23:24:51.327208Z</date>
+  <millis>1748129091327</millis>
+  <nanos>208000</nanos>
   <sequence>0</sequence>
   <logger>collection.ServerLogger</logger>
   <level>INFO</level>
@@ -14,52 +14,216 @@
   <message>Сервер запущен на порту 21214</message>
 </record>
 <record>
-  <date>2025-05-24T21:00:19.733417400Z</date>
-  <millis>1748120419733</millis>
-  <nanos>417400</nanos>
+  <date>2025-05-24T23:24:54.497989200Z</date>
+  <millis>1748129094497</millis>
+  <nanos>989200</nanos>
   <sequence>1</sequence>
   <logger>collection.ServerLogger</logger>
   <level>INFO</level>
   <class>connection.Server</class>
   <method>handleClientConnection</method>
   <thread>1</thread>
-  <message>Подключен клиент: /192.168.56.1:58886</message>
+  <message>Подключен клиент: /192.168.56.1:59630</message>
 </record>
 <record>
-  <date>2025-05-24T21:00:22.812507200Z</date>
-  <millis>1748120422812</millis>
-  <nanos>507200</nanos>
+  <date>2025-05-24T23:25:08.581951500Z</date>
+  <millis>1748129108581</millis>
+  <nanos>951500</nanos>
   <sequence>2</sequence>
   <logger>collection.ServerLogger</logger>
   <level>INFO</level>
-  <class>connection.Server</class>
-  <method>handleClientConnection</method>
-  <thread>1</thread>
-  <message>Подключен клиент: /192.168.56.1:58891</message>
+  <class>connection.ProcessCommand</class>
+  <method>run</method>
+  <thread>20</thread>
+  <message>Получена команда: info
+От пользователя: User{login='123'}</message>
 </record>
 <record>
-  <date>2025-05-24T21:01:21.161940600Z</date>
-  <millis>1748120481161</millis>
-  <nanos>940600</nanos>
+  <date>2025-05-24T23:25:19.417903100Z</date>
+  <millis>1748129119417</millis>
+  <nanos>903100</nanos>
   <sequence>3</sequence>
   <logger>collection.ServerLogger</logger>
   <level>INFO</level>
   <class>connection.ProcessCommand</class>
   <method>run</method>
-  <thread>21</thread>
+  <thread>22</thread>
   <message>Получена команда: info
 От пользователя: User{login='123'}</message>
 </record>
 <record>
-  <date>2025-05-24T21:01:30.321500100Z</date>
-  <millis>1748120490321</millis>
-  <nanos>500100</nanos>
+  <date>2025-05-24T23:25:28.599800100Z</date>
+  <millis>1748129128599</millis>
+  <nanos>800100</nanos>
   <sequence>4</sequence>
   <logger>collection.ServerLogger</logger>
   <level>INFO</level>
   <class>connection.ProcessCommand</class>
   <method>run</method>
   <thread>23</thread>
+  <message>Получена команда: sum_of_age
+От пользователя: User{login='123'}</message>
+</record>
+<record>
+  <date>2025-05-24T23:25:30.992522600Z</date>
+  <millis>1748129130992</millis>
+  <nanos>522600</nanos>
+  <sequence>5</sequence>
+  <logger>collection.ServerLogger</logger>
+  <level>INFO</level>
+  <class>connection.ProcessCommand</class>
+  <method>run</method>
+  <thread>24</thread>
   <message>Получена команда: help
+От пользователя: User{login='123'}</message>
+</record>
+<record>
+  <date>2025-05-24T23:25:33.472366900Z</date>
+  <millis>1748129133472</millis>
+  <nanos>366900</nanos>
+  <sequence>6</sequence>
+  <logger>collection.ServerLogger</logger>
+  <level>INFO</level>
+  <class>connection.ProcessCommand</class>
+  <method>run</method>
+  <thread>25</thread>
+  <message>Получена команда: clear
+От пользователя: User{login='123'}</message>
+</record>
+<record>
+  <date>2025-05-24T23:25:36.048372600Z</date>
+  <millis>1748129136048</millis>
+  <nanos>372600</nanos>
+  <sequence>7</sequence>
+  <logger>collection.ServerLogger</logger>
+  <level>INFO</level>
+  <class>connection.ProcessCommand</class>
+  <method>run</method>
+  <thread>27</thread>
+  <message>Получена команда: info
+От пользователя: User{login='123'}</message>
+</record>
+<record>
+  <date>2025-05-24T23:26:34.250272600Z</date>
+  <millis>1748129194250</millis>
+  <nanos>272600</nanos>
+  <sequence>8</sequence>
+  <logger>collection.ServerLogger</logger>
+  <level>WARNING</level>
+  <class>connection.Server</class>
+  <method>lambda$handleClientConnection$0</method>
+  <thread>19</thread>
+  <message>Ошибка клиента</message>
+</record>
+<record>
+  <date>2025-05-24T23:26:34.252271100Z</date>
+  <millis>1748129194252</millis>
+  <nanos>271100</nanos>
+  <sequence>9</sequence>
+  <logger>collection.ServerLogger</logger>
+  <level>INFO</level>
+  <class>connection.Server</class>
+  <method>lambda$handleClientConnection$0</method>
+  <thread>19</thread>
+  <message>Клиент отключился: /192.168.56.1:59630</message>
+</record>
+<record>
+  <date>2025-05-24T23:26:35.679808600Z</date>
+  <millis>1748129195679</millis>
+  <nanos>808600</nanos>
+  <sequence>10</sequence>
+  <logger>collection.ServerLogger</logger>
+  <level>INFO</level>
+  <class>connection.Server</class>
+  <method>handleClientConnection</method>
+  <thread>1</thread>
+  <message>Подключен клиент: /192.168.56.1:59637</message>
+</record>
+<record>
+  <date>2025-05-24T23:26:41.513002400Z</date>
+  <millis>1748129201513</millis>
+  <nanos>2400</nanos>
+  <sequence>11</sequence>
+  <logger>collection.ServerLogger</logger>
+  <level>INFO</level>
+  <class>connection.ProcessCommand</class>
+  <method>run</method>
+  <thread>29</thread>
+  <message>Получена команда: authorization
+От пользователя: User{login='123'}</message>
+</record>
+<record>
+  <date>2025-05-24T23:26:55.171553500Z</date>
+  <millis>1748129215171</millis>
+  <nanos>553500</nanos>
+  <sequence>12</sequence>
+  <logger>collection.ServerLogger</logger>
+  <level>INFO</level>
+  <class>connection.ProcessCommand</class>
+  <method>run</method>
+  <thread>32</thread>
+  <message>Получена команда: add
+От пользователя: User{login='123'}</message>
+</record>
+<record>
+  <date>2025-05-24T23:26:59.524879800Z</date>
+  <millis>1748129219524</millis>
+  <nanos>879800</nanos>
+  <sequence>13</sequence>
+  <logger>collection.ServerLogger</logger>
+  <level>INFO</level>
+  <class>connection.ProcessCommand</class>
+  <method>run</method>
+  <thread>33</thread>
+  <message>Получена команда: add
+От пользователя: User{login='123'}</message>
+</record>
+<record>
+  <date>2025-05-24T23:39:16.579561200Z</date>
+  <millis>1748129956579</millis>
+  <nanos>561200</nanos>
+  <sequence>14</sequence>
+  <logger>collection.ServerLogger</logger>
+  <level>WARNING</level>
+  <class>connection.Server</class>
+  <method>lambda$handleClientConnection$0</method>
+  <thread>19</thread>
+  <message>Ошибка клиента</message>
+</record>
+<record>
+  <date>2025-05-24T23:39:16.580563200Z</date>
+  <millis>1748129956580</millis>
+  <nanos>563200</nanos>
+  <sequence>15</sequence>
+  <logger>collection.ServerLogger</logger>
+  <level>INFO</level>
+  <class>connection.Server</class>
+  <method>lambda$handleClientConnection$0</method>
+  <thread>19</thread>
+  <message>Клиент отключился: /192.168.56.1:59637</message>
+</record>
+<record>
+  <date>2025-05-24T23:39:20.276868700Z</date>
+  <millis>1748129960276</millis>
+  <nanos>868700</nanos>
+  <sequence>16</sequence>
+  <logger>collection.ServerLogger</logger>
+  <level>INFO</level>
+  <class>connection.Server</class>
+  <method>handleClientConnection</method>
+  <thread>1</thread>
+  <message>Подключен клиент: /192.168.56.1:59723</message>
+</record>
+<record>
+  <date>2025-05-24T23:39:25.824450100Z</date>
+  <millis>1748129965824</millis>
+  <nanos>450100</nanos>
+  <sequence>17</sequence>
+  <logger>collection.ServerLogger</logger>
+  <level>INFO</level>
+  <class>connection.ProcessCommand</class>
+  <method>run</method>
+  <thread>35</thread>
+  <message>Получена команда: authorization
 От пользователя: User{login='123'}</message>
 </record>
