@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 
 public class DialogWindow {
@@ -17,6 +18,7 @@ public class DialogWindow {
     private Localizer localizer;
     private String txt;
     private String todo;
+    private File file;
 
     @FXML
     private Label mainTxt;
@@ -50,6 +52,20 @@ public class DialogWindow {
             DialogManager.alert("nameError", localizer);
         }
         return null;
+    }
+
+    public File executeScript(){
+        try{
+            file = new File(infoField.getText());
+        } catch (Exception e){
+            DialogManager.alert("scriptError", localizer);
+        }
+        if (file.exists() && file.isFile()){
+            return file;
+        } else {
+            DialogManager.alert("scriptError", localizer);
+            return null;
+        }
     }
 
     public void setStage(Stage stage){
@@ -94,6 +110,10 @@ public class DialogWindow {
             case "filterStart":
                 txt = "FilterStartsWithNameBtn";
                 todo = "EnterNamePart";
+                return;
+            case "executeScript":
+                txt = "executeScript";
+                todo = "executeScriptToDo";
                 return;
             default:
                 todo = "None";

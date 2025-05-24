@@ -5,10 +5,7 @@ import seClasses.Info;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.PriorityBlockingQueue;
 
 public class Response implements Serializable {
@@ -24,6 +21,7 @@ public class Response implements Serializable {
     private User user;
     private Info info;
     private PriorityBlockingQueue<Dragon> dragons;
+    private ArrayList<Response> responseList = new ArrayList<>();
 
     public Response(){}
 
@@ -42,6 +40,11 @@ public class Response implements Serializable {
         this.user = user;
     }
 
+    public Response(ResponseStatus status, List<Response> responseList, CommandResponse type){
+        this.responseList = (ArrayList<Response>) responseList;
+        this.responseStatus = status;
+        this.type = type;
+    }
     public Response(ResponseStatus status, CommandResponse type){
         this.type = type;
         this.responseStatus = status;

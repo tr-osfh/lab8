@@ -8,6 +8,8 @@ import connection.User;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class ExecuteScriptCommand implements Command, Serializable {
     @Serial
@@ -26,10 +28,13 @@ public class ExecuteScriptCommand implements Command, Serializable {
 
     @Override
     public Response execute() {
-        StringBuilder output = new StringBuilder();
-        commandStack.forEach(command -> output.append(command.execute().getResponse()).append("\n"));
+        ArrayList<Response> responseList = new ArrayList<>();
+        for (Command command : commandStack){
+            Response response = command.execute();
+            responseList.add(response);
+        }
         System.out.println(commandStack);
-        return new Response(ResponseStatus.OK, output.substring(0, output.length() - 1), CommandResponse.EXECUTE_SCRIPT);
+        return new Response(ResponseStatus.OK, responseList, CommandResponse.EXECUTE_SCRIPT);
 
     }
 

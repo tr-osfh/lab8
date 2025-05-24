@@ -24,6 +24,7 @@ public class Response implements Serializable {
     private User user;
     private Info info;
     private PriorityBlockingQueue<Dragon> dragons;
+    private ArrayList<Response> responseList = new ArrayList<>();
 
 
     public Response(){}
@@ -106,6 +107,10 @@ public class Response implements Serializable {
 
     public Info getInfo() {
         return info;
+    }
+
+    public ArrayList<Response> getResponseList() {
+        return responseList;
     }
 
     @Override

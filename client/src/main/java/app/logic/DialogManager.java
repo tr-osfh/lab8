@@ -8,6 +8,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seClasses.Dragon;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -76,6 +77,14 @@ public class DialogManager {
         helpWindow.help(localizer.getKeyString(title), txt);
     }
 
+    public static File getScript(Localizer localizer){
+        dialogWindow.setLocalizer(localizer);
+        dialogWindow.clear();
+        dialogWindow.setAction("executeScript");
+        dialogWindow.show();
+        return dialogWindow.executeScript();
+    }
+
     public static Long getId(Localizer localizer){
         dialogWindow.setLocalizer(localizer);
         dialogWindow.clear();
@@ -99,6 +108,8 @@ public class DialogManager {
         dialogWindow.show();
         return dialogWindow.getNamePart();
     }
+
+
 
 
     private static Parent loadFxml(FXMLLoader loader) {

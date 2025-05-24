@@ -1,5 +1,6 @@
 package app.logic;
 
+import java.io.File;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -8,6 +9,7 @@ import java.util.stream.Collectors;
 
 import commands.*;
 import connection.*;
+import file.ExecuteScript;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.*;
@@ -419,7 +421,6 @@ public class MainWindow extends Window {
                 if (response.getResponseStatus().equals(ResponseStatus.OK) && response.getType().equals(CommandResponse.ADD)) {
                     DialogManager.inform("Info", localizer.getKeyString(response.getResponse()), localizer);
                 } else {
-                    System.out.println("debil");
                     DialogManager.alert("Error", localizer);
                 }
             } catch (InterruptedException e) {
@@ -517,7 +518,6 @@ public class MainWindow extends Window {
                     if (response.getResponseStatus().equals(ResponseStatus.OK) && response.getType().equals(CommandResponse.UPDATE)) {
                         DialogManager.inform("Info", localizer.getKeyString(response.getResponse()), localizer);
                     } else {
-                        System.out.println(response.getResponseStatus());
                         DialogManager.alert("Error", localizer);
                     }
                 } catch (InterruptedException e) {
@@ -559,7 +559,6 @@ public class MainWindow extends Window {
                 if (response.getResponseStatus().equals(ResponseStatus.OK) && response.getType().equals(CommandResponse.REMOVE_LOWER)) {
                     DialogManager.inform("Info", localizer.getKeyString(response.getResponse()), localizer);
                 } else {
-                    System.out.println(response.getResponseStatus());
                     DialogManager.alert("Error", localizer);
                 }
             } catch (InterruptedException e) {
@@ -570,6 +569,44 @@ public class MainWindow extends Window {
 
     @FXML
     public void executeScript() {
+        File file;
+
+        file = DialogManager.getScript(localizer);
+
+        if (file != null){
+            ExecuteScript script = new ExecuteScript(file, Client.getUser());
+            script.readScript();
+            Command exeScr = new ExecuteScriptCommand(script.getCommandQueue(), Client.getUser());
+            Client.setCommand(exeScr);
+            try {
+                int attempts = 0;
+                Response response = null;
+                while (attempts < 40) {
+                    response = Client.getResponse();
+                    if (response != null && response.getType().equals(CommandResponse.EXECUTE_SCRIPT)) {
+                        break;
+                    }
+                    Thread.sleep(100);
+                    attempts++;
+                }
+                if (response == null) {
+                    DialogManager.alert("TimeoutError", localizer);
+                    return;
+                }
+                if (response.getResponseStatus().equals(ResponseStatus.OK) && response.getType().equals(CommandResponse.EXECUTE_SCRIPT)) {
+                    if (response.getResponseList() == null){
+                        DialogManager.alert("Error", localizer);
+                    } else {
+                        ScriptResponse.process(response.getResponseList(), localizer, this);
+                    }
+
+                } else {
+                    DialogManager.alert("Error", localizer);
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @FXML
@@ -599,7 +636,7 @@ public class MainWindow extends Window {
             try {
                 int attempts = 0;
                 Response response = null;
-                while (attempts < 20) {
+                while (attempts < 40) {
                     response = Client.getResponse();
                     if (response != null && response.getType().equals(CommandResponse.REMOVE_BY_ID)) {
                         break;
@@ -888,5 +925,13 @@ public class MainWindow extends Window {
         PriorityQueue<Dragon> dragons = new PriorityQueue<>();
         dragons.add(dragon);
         setCollection(dragons);
+    }
+
+    public boolean isFiltered() {
+        return isFiltered;
+    }
+
+    public void setFiltered(boolean filtered) {
+        isFiltered = filtered;
     }
 }
