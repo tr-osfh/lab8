@@ -44,7 +44,6 @@ public class MainApp extends Application implements SceneSwitchObserver{
         welcomeWindow.setListener(this);
         welcomeWindow.setLocalizer(localizer);
         index.setScene(new Scene(welcomeRoot));
-        index.setTitle(localizer.getKeyString("App"));
         index.setResizable(false);
         index.show();
     }
@@ -57,7 +56,6 @@ public class MainApp extends Application implements SceneSwitchObserver{
         authWindow.setLocalizer(localizer);
         authWindow.setConnectionError(connectWindow);
         index.setScene(new Scene(authRoot));
-        index.setTitle(localizer.getKeyString("App"));
         Client.addDisconnectListener(authWindow);
     }
 
@@ -70,7 +68,6 @@ public class MainApp extends Application implements SceneSwitchObserver{
         regWindow.setConnectionError(connectWindow);
         index.setScene(new Scene(regRoot));
         index.setResizable(false);
-        index.setTitle(localizer.getKeyString("App"));
         Client.addDisconnectListener(regWindow);
     }
 
@@ -98,7 +95,6 @@ public class MainApp extends Application implements SceneSwitchObserver{
         Client.addDisconnectListener(mainWindow);
 
         index.setScene(new Scene(mainRoot));
-        index.setTitle(localizer.getKeyString("App"));
         index.setResizable(false);
         index.show();
 

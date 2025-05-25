@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -22,8 +23,14 @@
          </children>
         </GridPane>
 
-        <ComboBox fx:id="languageComboBox" layoutX="327.0" layoutY="14.0" prefHeight="25.0" prefWidth="96.0" promptText="Язык" style="-fx-background-color: efe2ba;" />
+        <ComboBox fx:id="languageComboBox" layoutX="327.0" layoutY="14.0" prefHeight="25.0" prefWidth="96.0" promptText="Язык" style="-fx-background-color: efe2ba;">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></ComboBox>
       <TitledPane animated="false" layoutX="69.0" layoutY="-41.0" text="untitled" />
-      <Button fx:id="enterBtn" layoutX="144.0" layoutY="183.0" mnemonicParsing="false" onAction="#enter" prefHeight="38.0" prefWidth="153.0" style="-fx-background-radius: 20 20 20 20; -fx-background-color: efe2ba;" text="Войти" />
+      <Button fx:id="enterBtn" layoutX="144.0" layoutY="183.0" mnemonicParsing="false" onAction="#enter" prefHeight="38.0" prefWidth="153.0" style="-fx-background-radius: 20 20 20 20; -fx-background-color: efe2ba;" text="Войти">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></Button>
     </children>
 </AnchorPane>

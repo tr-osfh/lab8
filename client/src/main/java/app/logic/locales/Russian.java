@@ -22,10 +22,10 @@ public class Russian {
         language.put("NoSuchUser", "Проверьте введенные данные.");
         language.put("Empty", "Поля не могут быть пустыми");
         language.put("notEquals", "Пароли не совпадают");
-        language.put("InfoReturn", "Тип хранимых данных: {0}\n\nКолличество элементов: {1}\n\nПринадлежат вам: {2}\n\nДата инициализации: {3}");
+        language.put("InfoReturn", "Тип хранимых данных: {0}\nКолличество элементов: {1}\nПринадлежат вам: {2}\nДата инициализации: {3}");
         language.put("Info", "Информация");
-        language.put("addNullFields", "Следующие поля не могут быть пустыми:\n\nИмя, Х, Y, Тип.");
-        language.put("addNullKillerFields", "Следующие поля не могут быть пустыми:\n\nИмя убийцы, Паспорт убийцы, Цвет глаз, Цвет волос, Координата X, Координата Y, Координата Z.");
+        language.put("addNullFields", "Следующие поля не могут быть пустыми:\nИмя, Х, Y, Тип.");
+        language.put("addNullKillerFields", "Следующие поля не могут быть пустыми:\nИмя убийцы, Паспорт убийцы, Цвет глаз, Цвет волос, Координата X, Координата Y, Координата Z.");
         language.put("Id", "ИД");
         language.put("Name", "Имя");
         language.put("yCoordinate", "Координата Y");

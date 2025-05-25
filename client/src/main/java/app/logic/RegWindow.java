@@ -17,8 +17,10 @@ public class RegWindow implements DisconnectListener{
     private Localizer localizer;
     private ConnectionErrorWindow connectionErrorWindow;
     private final HashMap<String, Locale> localeHashMap = new HashMap<>() {{
-        put("Русский", new Locale("ru")); //todo добавить остальные языки
-        put("Español", new Locale("es", "DOM"));
+        put("Русский", new Locale("ru"));
+        put("Español", new Locale("es", "DO"));
+        put("ελληνικά", new Locale("el"));
+        put("slovenščina", new Locale("sl"));
     }};
 
     public RegWindow(){}
@@ -53,7 +55,6 @@ public class RegWindow implements DisconnectListener{
         changeLanguage();
         languageComboBox.setItems(FXCollections.observableArrayList(localeHashMap.keySet()));
         languageComboBox.setValue(Client.getLanguage());
-        languageComboBox.setStyle("-fx-font: 12px \"Arial\";");
         languageComboBox.setOnAction(event -> {
             var newLanguage = languageComboBox.getValue();
             Locale locale = localeHashMap.get(newLanguage);

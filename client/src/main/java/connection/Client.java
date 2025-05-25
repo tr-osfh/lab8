@@ -176,7 +176,6 @@ public class Client {
             byte[] data = new byte[buffer.limit()];
             buffer.get(data);
             Response response = CommandSerializer.deserialize(data);
-            System.out.println("Получен ответ от сервера: " + response.getResponseStatus());
 
             if (response.getResponseStatus().equals(ResponseStatus.REFRESH)){
                 dragons.clear();
@@ -192,7 +191,6 @@ public class Client {
             }
             key.interestOps(SelectionKey.OP_WRITE | SelectionKey.OP_READ);
             isWaitingForResponse = false;
-                cr.printLine("Введите команду: \n");
         } else if (bytesRead == -1) {
             noConnectionHandler();
             isConnected = false;
@@ -216,7 +214,7 @@ public class Client {
     }
 
 
-    private Command readCommand() { //todo Обратить внимание
+    private Command readCommand() {
         String[] input = cr.readCommand();
 
         if (input == null || input.length == 0) return null;

@@ -346,7 +346,6 @@ public class AddDragonWindow {
 
         typeComboBox.setItems(FXCollections.observableArrayList(typeHashMap.keySet()));
         typeComboBox.setValue(localizer.getKeyString("None"));
-        typeComboBox.setStyle("-fx-font: 12px \"Arial\";");
         typeComboBox.setOnAction(event -> {
             DragonType curType = typeHashMap.get(typeComboBox.getValue());
             this.type = curType;
@@ -355,14 +354,12 @@ public class AddDragonWindow {
         hairColorComboBox.setItems(FXCollections.observableArrayList(
                 hairColorHashMap.keySet()));
         hairColorComboBox.setValue(localizer.getKeyString("None"));
-        hairColorComboBox.setStyle("-fx-font: 12px \"Arial\";");
         hairColorComboBox.setOnAction(event -> {
             curHairColor = hairColorHashMap.get(hairColorComboBox.getValue());
         });
 
         eyeColorComboBox.setItems(FXCollections.observableArrayList(eyeColorHashMap.keySet()));
         eyeColorComboBox.setValue(localizer.getKeyString("None"));
-        eyeColorComboBox.setStyle("-fx-font: 12px \"Arial\";");
         eyeColorComboBox.setOnAction(event -> {
             curEyeColor = eyeColorHashMap.get(eyeColorComboBox.getValue());
         });

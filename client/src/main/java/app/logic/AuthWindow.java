@@ -1,7 +1,6 @@
 package app.logic;
 
 import commands.AuthorizationCommand;
-import commands.RegistrationCommand;
 import connection.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -10,15 +9,16 @@ import javafx.scene.control.*;
 
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class AuthWindow implements DisconnectListener{
     private Runnable callback;
     private Localizer localizer;
     private ConnectionErrorWindow connectWindow;
     private final HashMap<String, Locale> localeHashMap = new HashMap<>() {{
-        put("Русский", new Locale("ru")); //todo добавить остальные языки
-        put("Español", new Locale("es", "DOM"));
+        put("Русский", new Locale("ru"));
+        put("Español", new Locale("es", "DO"));
+        put("ελληνικά", new Locale("el"));
+        put("slovenščina", new Locale("sl"));
     }};
 
     public AuthWindow(){}
@@ -47,7 +47,6 @@ public class AuthWindow implements DisconnectListener{
         changeLanguage();
         languageComboBox.setItems(FXCollections.observableArrayList(localeHashMap.keySet()));
         languageComboBox.setValue(Client.getLanguage());
-        languageComboBox.setStyle("-fx-font: 12px \"Arial\";");
         languageComboBox.setOnAction(event -> {
             var newLanguage = languageComboBox.getValue();
             Locale locale = localeHashMap.get(newLanguage);
@@ -91,7 +90,6 @@ public class AuthWindow implements DisconnectListener{
         }
         try {
             if (response.getResponseStatus().equals(ResponseStatus.OK)){
-                System.out.println("Aga");
                 Client.setUser(response.getUser());
                 Client.removeDisconnectListener(this);
                 callback.run();

@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import commands.*;
 import connection.*;
 import file.ExecuteScript;
+import javafx.animation.AnimationTimer;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.*;
@@ -36,11 +37,15 @@ public class MainWindow extends Window implements DisconnectListener, RefreshCol
     private Random random = new Random();
     private GraphicsContext gc;
     private List<DragonHitBox> dragonHitBoxes = new ArrayList<>();
+    private Map<Dragon, DragonAnimationState> animationStates = new HashMap<>();
+    private AnimationTimer animationTimer;
 
     private Localizer localizer;
     private final HashMap<String, Locale> localeHashMap = new HashMap<>() {{
-        put("Русский", new Locale("ru")); //todo добавить остальные языки
-        put("Español", new Locale("es", "DOM"));
+        put("Русский", new Locale("ru"));
+        put("Español", new Locale("es", "DO"));
+        put("ελληνικά", new Locale("el"));
+        put("slovenščina", new Locale("sl"));
     }};
 
     @FXML
@@ -103,7 +108,7 @@ public class MainWindow extends Window implements DisconnectListener, RefreshCol
     @FXML
     private TableColumn<Dragon, Integer> yCoordinateColoumn;
     @FXML
-    private TableColumn<Dragon, LocalDateTime> dateColoumn;
+    private TableColumn<Dragon, String> dateColoumn;
     @FXML
     private TableColumn<Dragon, Long> ageColoumn;
     @FXML
@@ -121,11 +126,11 @@ public class MainWindow extends Window implements DisconnectListener, RefreshCol
     @FXML
     private TableColumn<Dragon, String> hairColorColoumn;
     @FXML
-    private TableColumn<Dragon, Integer> xLocationColoumn;
+    private TableColumn<Dragon, String> xLocationColoumn;
     @FXML
-    private TableColumn<Dragon, Integer> yLocationColoumn;
+    private TableColumn<Dragon, String> yLocationColoumn;
     @FXML
-    private TableColumn<Dragon, Double> zLocationColoumn;
+    private TableColumn<Dragon, String> zLocationColoumn;
     @FXML
     private TableColumn<Dragon, String> locationNameColoumn;
     @FXML
@@ -146,18 +151,27 @@ public class MainWindow extends Window implements DisconnectListener, RefreshCol
     @FXML
     void initialize() {
         this.localizer = MainApp.getLocalizer();
-        changeLanguage();
+
         gc = dragonCanvas.getGraphicsContext2D();
         Platform.runLater(() -> setCollection(Client.getDragons()));
-
+        changeLanguage();
         fillTable();
+
+        animationTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                if (!dragonTable.getItems().isEmpty()) {
+                    drawVisual(new ArrayList<>(dragonTable.getItems()));
+                }
+            }
+        };
+        animationTimer.start();
 
         userTxt.setText(Client.getUser().getLogin());
 
 
         languageComboBox.setItems(FXCollections.observableArrayList(localeHashMap.keySet()));
         languageComboBox.setValue(Client.getLanguage());
-        languageComboBox.setStyle("-fx-font: 12px \"Arial\";");
         languageComboBox.setOnAction(event -> {
             var newLanguage = languageComboBox.getValue();
             Locale locale = localeHashMap.get(newLanguage);
@@ -167,7 +181,7 @@ public class MainWindow extends Window implements DisconnectListener, RefreshCol
             Client.setLanguage(newLanguage);
         });
 
-        image = new ImageView(new Image(getClass().getResourceAsStream("/Sample_User_Icon.png")));
+        image.setImage(new Image(getClass().getResourceAsStream("/user.png")));
 
 
         dragonCanvas.widthProperty().bind(dragonBase.widthProperty());
@@ -722,6 +736,16 @@ public class MainWindow extends Window implements DisconnectListener, RefreshCol
         double scale = 200;
 
         for (Dragon dragon : lDragons) {
+            if (!animationStates.containsKey(dragon)) {
+                animationStates.put(dragon, new DragonAnimationState(-50));
+            }
+        }
+        animationStates.keySet().retainAll(lDragons);
+
+        for (Dragon dragon : lDragons) {
+
+            DragonAnimationState state = animationStates.get(dragon);
+            state.update();
 
             String owner = dragon.getUserLogin();
             if (!colors.containsKey(owner)) {
@@ -731,13 +755,13 @@ public class MainWindow extends Window implements DisconnectListener, RefreshCol
                 colors.put(owner, Color.hsb(hue, saturation, brightness));
             }
 
-            var size = Math.min(Math.max(30, (dragon.getWeight() == null) ? 30 : dragon.getWeight() * 5), 100);
+            var size = Math.min(Math.max(30, (dragon.getWeight() == null) ? 30 : dragon.getWeight() * 3), 150);
 
             double xNorm = normalize(dragon.getCoordinates().getX(), scale);
             double yNorm = normalize(dragon.getCoordinates().getY(), scale);
 
             double x = (xNorm + 1.0) / 2.0 * canvasWidth;
-            double y = (yNorm + 1.0) / 2.0 * canvasHeight;
+            double y = (yNorm + 1.0) / 2.0 * canvasHeight + state.getY();
 
             double radius = size / 2.0;
             dragonHitBoxes.add(new DragonHitBox(dragon, x, y, radius));
@@ -765,6 +789,7 @@ public class MainWindow extends Window implements DisconnectListener, RefreshCol
 
     private void changeLanguage(){
         fillTable();
+
         helpBtn.setText(localizer.getKeyString("HelpBtn"));
         exitBtn.setText(localizer.getKeyString("ExitBtn"));
         headBtn.setText(localizer.getKeyString("HeadBtn"));
@@ -807,7 +832,7 @@ public class MainWindow extends Window implements DisconnectListener, RefreshCol
         nameColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(dragon.getValue().getName()));
         xCoordinateColoumn.setCellValueFactory(dragon -> new SimpleFloatProperty(dragon.getValue().getCoordinates().getX()).asObject());
         yCoordinateColoumn.setCellValueFactory(dragon -> new SimpleIntegerProperty(dragon.getValue().getCoordinates().getY()).asObject());
-        dateColoumn.setCellValueFactory(dragon -> new SimpleObjectProperty<>(dragon.getValue().getCreationDate()));
+        dateColoumn.setCellValueFactory(dragon -> new SimpleObjectProperty<>(localizer.getDate(dragon.getValue().getCreationDate())));
         ageColoumn.setCellValueFactory(dragon ->
                 new SimpleObjectProperty<>(dragon.getValue().getAge())
         );
@@ -825,14 +850,20 @@ public class MainWindow extends Window implements DisconnectListener, RefreshCol
                 dragon.getValue().getKiller() != null ? localizer.getKeyString(dragon.getValue().getKiller().getEyeColor().toString()) : localizer.getKeyString("None")));
         hairColorColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(
                 dragon.getValue().getKiller() != null ? localizer.getKeyString(dragon.getValue().getKiller().getHairColor().toString()) : localizer.getKeyString("None")));
-        xLocationColoumn.setCellValueFactory(dragon -> new SimpleObjectProperty<>(
-                (dragon.getValue().getKiller() != null && dragon.getValue().getKiller().getLocation() != null) ? dragon.getValue().getKiller().getLocation().getX() : null));
+        xLocationColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(
+                (dragon.getValue().getKiller() != null && dragon.getValue().getKiller().getLocation() != null)
+                        ? String.valueOf(dragon.getValue().getKiller().getLocation().getX())
+                        : localizer.getKeyString("None")));
 
-        yLocationColoumn.setCellValueFactory(dragon -> new SimpleObjectProperty<>(
-                (dragon.getValue().getKiller() != null && dragon.getValue().getKiller().getLocation() != null) ? dragon.getValue().getKiller().getLocation().getY() : null));
-        zLocationColoumn.setCellValueFactory(dragon -> new SimpleObjectProperty<>(
-                (dragon.getValue().getKiller() != null && dragon.getValue().getKiller().getLocation() != null) ? dragon.getValue().getKiller().getLocation().getZ() : null)
-        );
+        yLocationColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(
+                (dragon.getValue().getKiller() != null && dragon.getValue().getKiller().getLocation() != null)
+                        ? String.valueOf(dragon.getValue().getKiller().getLocation().getY())
+                        : localizer.getKeyString("None")));
+
+        zLocationColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(
+                (dragon.getValue().getKiller() != null && dragon.getValue().getKiller().getLocation() != null)
+                        ? String.valueOf(dragon.getValue().getKiller().getLocation().getZ())
+                        : localizer.getKeyString("None")));
         locationNameColoumn.setCellValueFactory(dragon -> new SimpleStringProperty(
                 dragon.getValue().getKiller() != null ? dragon.getValue().getKiller().getLocation().getName() : localizer.getKeyString("None")));
 
@@ -873,10 +904,10 @@ public class MainWindow extends Window implements DisconnectListener, RefreshCol
             }
         });
 
-        xLocationColoumn.setCellFactory(column -> new TableCell<Dragon, Integer>() {
+        xLocationColoumn.setCellFactory(column -> new TableCell<Dragon, String>() {
             @Override
-            protected void updateItem(Integer x, boolean empty) {
-                super.updateItem(x, empty);
+            protected void updateItem(String x, boolean empty) {
+                super.updateItem(String.valueOf(x), empty);
                 if (empty) {
                     setText("");
                 } else if (x == null) {
@@ -887,10 +918,10 @@ public class MainWindow extends Window implements DisconnectListener, RefreshCol
             }
         });
 
-        yLocationColoumn.setCellFactory(column -> new TableCell<Dragon, Integer>() {
+        yLocationColoumn.setCellFactory(column -> new TableCell<Dragon, String>() {
             @Override
-            protected void updateItem(Integer y, boolean empty) {
-                super.updateItem(y, empty);
+            protected void updateItem(String y, boolean empty) {
+                super.updateItem(String.valueOf(y), empty);
                 if (empty) {
                     setText("");
                 } else if (y == null) {
@@ -901,16 +932,16 @@ public class MainWindow extends Window implements DisconnectListener, RefreshCol
             }
         });
 
-        zLocationColoumn.setCellFactory(column -> new TableCell<Dragon, Double>() {
+        zLocationColoumn.setCellFactory(column -> new TableCell<Dragon, String>() {
             @Override
-            protected void updateItem(Double z, boolean empty) {
-                super.updateItem(z, empty);
+            protected void updateItem(String z, boolean empty) {
+                super.updateItem(String.valueOf(z), empty);
                 if (empty) {
                     setText("");
                 } else if (z == null) {
                     setText(localizer.getKeyString("None"));
                 } else {
-                    setText(String.format("%.2f", z));
+                    setText(z);
                 }
             }
         });

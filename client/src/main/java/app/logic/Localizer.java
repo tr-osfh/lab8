@@ -1,6 +1,8 @@
 package app.logic;
 
+import app.logic.locales.Greek;
 import app.logic.locales.Russian;
+import app.logic.locales.Slovenian;
 import app.logic.locales.Spanish;
 
 import java.time.LocalDate;
@@ -10,14 +12,18 @@ import java.time.format.FormatStyle;
 import java.util.*;
 
 public class Localizer {
-    private static final Map<Locale, Map<String, String>> RESOURCES = new HashMap<>();
+    private static final Map<Locale, Map<String, String>> resources = new HashMap<>();
     private Locale currentLocale;
 
-    static {;
+    static {
 
-        RESOURCES.put(new Locale("ru"), Russian.getMap());
+        resources.put(new Locale("ru"), Russian.getMap());
 
-        RESOURCES.put(new Locale("es", "DOM"), Spanish.getMap());
+        resources.put(new Locale("es", "DO"), Spanish.getMap());
+
+        resources.put(new Locale("el"), Greek.getMap());
+
+        resources.put(new Locale("sl"), Slovenian.getMap());
     }
 
     public Localizer(Locale defaultLocale) {
@@ -29,20 +35,12 @@ public class Localizer {
     }
 
     public String getKeyString(String key) {
-        return RESOURCES.get(currentLocale).getOrDefault(key, "[" + key + "]");
-    }
-
-    public String getDate(LocalDate date) {
-        if (date == null) return "null";
-        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
-                .withLocale(currentLocale);
-        return date.format(formatter);
+        return resources.get(currentLocale).getOrDefault(key, "[" + key + "]");
     }
 
     public String getDate(LocalDateTime date) {
-        if (date == null) return "null";
-        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
-                .withLocale(currentLocale);
+        if (date == null) return "None";
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).withLocale(currentLocale);
         return date.format(formatter);
     }
 }

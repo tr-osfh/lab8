@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="643.0" prefWidth="1296.0" style="-fx-background-color: f1f0ec;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.logic.MainWindow">
+<AnchorPane prefHeight="643.0" prefWidth="1296.0" style="-fx-background-color: f1f0ec;" styleClass="styles/main.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.logic.MainWindow">
    <children>
       <GridPane layoutX="14.0" layoutY="559.0" prefHeight="71.0" prefWidth="788.0">
         <columnConstraints>
@@ -40,6 +40,9 @@
             <Button fx:id="clearBtn" mnemonicParsing="false" onAction="#clear" prefHeight="77.0" prefWidth="113.0" style="-fx-background-color: efe2ba; -fx-background-radius: 0 0 0 0;" text="Очистить" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
          </children>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </GridPane>
       <TableView fx:id="dragonTable" layoutX="14.0" layoutY="59.0" prefHeight="484.0" prefWidth="788.0" style="-fx-background-radius: 0 0 20 20;">
         <columns>
@@ -77,22 +80,33 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="removeFilterBtn" mnemonicParsing="false" onAction="#removeFilter" prefHeight="45.0" prefWidth="185.0" style="-fx-background-color: efe2ba; -fx-background-radius: 20 0 0 20;" text="Сбросить фильтр" GridPane.columnIndex="3" />
+            <Button fx:id="removeFilterBtn" mnemonicParsing="false" onAction="#removeFilter" prefHeight="45.0" prefWidth="185.0" style="-fx-background-color: efe2ba; -fx-background-radius: 20 0 0 20;" text="Сбросить фильтр" GridPane.columnIndex="3">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
             <GridPane prefHeight="45.0" prefWidth="161.0">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="65.0" minWidth="10.0" prefWidth="45.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="200.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="65.0" minWidth="6.0" prefWidth="46.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="196.0" minWidth="10.0" prefWidth="156.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <ImageView fx:id="image" fitHeight="49.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" />
-                  <Label fx:id="userTxt" alignment="CENTER" prefHeight="45.0" prefWidth="201.0" style="-fx-background-color: d79922; -fx-background-radius: 0 20 20 0;" text="USER" GridPane.columnIndex="1" />
-                  <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: d79922;" />
+                  <Label fx:id="userTxt" prefHeight="45.0" prefWidth="168.0" style="-fx-background-color: d79922; -fx-background-radius: 0 20 20 0;" text="USER" textFill="#efe2ba" GridPane.columnIndex="1">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font></Label>
+                  <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: d79922;">
+                     <children>
+                        <ImageView fx:id="image" fitHeight="36.0" fitWidth="39.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></Pane>
                </children>
             </GridPane>
-             <ComboBox fx:id="languageComboBox" prefHeight="61.0" prefWidth="139.0" promptText="Язык" style="-fx-background-color: efe2ba; -fx-background-radius: 0 20 20 0;" GridPane.columnIndex="4" />
+             <ComboBox fx:id="languageComboBox" prefHeight="61.0" prefWidth="139.0" promptText="Язык" style="-fx-background-color: efe2ba; -fx-background-radius: 0 20 20 0;" GridPane.columnIndex="4">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></ComboBox>
             <ProgressIndicator fx:id="reconnectionBar" prefHeight="40.0" prefWidth="47.0" visible="false" GridPane.columnIndex="2" />
             <Label fx:id="reconnectionText" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="195.0" text="Переподключение" visible="false" GridPane.columnIndex="1">
                <font>
